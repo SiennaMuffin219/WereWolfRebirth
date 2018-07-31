@@ -18,20 +18,20 @@ namespace WereWolfRebirth
         private DiscordClient client;
         private CommandsNextModule commands;
 
+        public static List<Personnage> users;
+
+
         static void Main(string[] args) => new Program().AsyncMain().GetAwaiter().GetResult();
 
         public async Task AsyncMain()
         {
             Config config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
 
-            Console.WriteLine(0);
             client = new DiscordClient(new DiscordConfiguration()
             {
                 LogLevel = LogLevel.Debug,
                 Token = config.token,
             });
-            Console.WriteLine(1);
-            //client.SetWebSocketClient<DSharpPlus.Net.WebSocket.WebSocketSharpClient>();
 
             client.DebugLogger.LogMessageReceived += DebugLogger_LogMessageReceived;
             commands = client.UseCommandsNext(new CommandsNextConfiguration()
@@ -50,10 +50,9 @@ namespace WereWolfRebirth
                 await client.ConnectAsync();
             }
             catch (Exception e)
-            {
+            {   
                 Console.WriteLine(e);
             }
-            Console.WriteLine(2);
             await Task.Delay(-1);
         }
 
