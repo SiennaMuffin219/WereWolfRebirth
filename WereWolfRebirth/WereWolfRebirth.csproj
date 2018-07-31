@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  
+  <PropertyGroup>
+    <RuntimeFrameworkVersion>2.0.1</RuntimeFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <SignAssembly>false</SignAssembly>
+    <ApplicationIcon />
+    <OutputType>Exe</OutputType>
+    <StartupObject></StartupObject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DSharpPlus" Version="3.2.3" />
+    <PackageReference Include="DSharpPlus.CommandsNext" Version="3.2.3" />
+    <PackageReference Include="DSharpPlus.Interactivity" Version="3.2.3" />
+    <PackageReference Include="DSharpPlus.WebSocket.WebSocketSharp" Version="3.2.3" />
+    <PackageReference Include="HSNXT.DSharpPlus.Extended.Emoji" Version="2.0.138" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+  </ItemGroup>
+
+</Project>
