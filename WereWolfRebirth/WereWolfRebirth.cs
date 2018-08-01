@@ -18,7 +18,6 @@ namespace WereWolfRebirth
         private DiscordClient client;
         private CommandsNextModule commands;
 
-        public static List<Personnage> users;
 
 
         static void Main(string[] args) => new Program().AsyncMain().GetAwaiter().GetResult();
@@ -33,18 +32,18 @@ namespace WereWolfRebirth
                 Token = config.token,
             });
 
-            client.DebugLogger.LogMessageReceived += DebugLogger_LogMessageReceived;
             commands = client.UseCommandsNext(new CommandsNextConfiguration()
             {
                 CaseSensitive = false,
                 StringPrefix = config.prefix
             });
             commands.RegisterCommands<BotCommands>();
-
             client.UseInteractivity(new InteractivityConfiguration());
 
+            client.DebugLogger.LogMessageReceived += DebugLogger_LogMessageReceived;
+            //client.ChannelCreated += 
             //client.MessageCreated += Client_MessageCreated;
-
+            
             try
             {
                 await client.ConnectAsync();
@@ -55,6 +54,8 @@ namespace WereWolfRebirth
             }
             await Task.Delay(-1);
         }
+
+
 
         private async Task Client_MessageCreated(MessageCreateEventArgs e)
         {
@@ -103,6 +104,12 @@ namespace WereWolfRebirth
 
             Console.ResetColor();
         }
+    }
+
+    class Environnement
+    {
+        public static List<DiscordUser> players;
+        public static List<DiscordChannel> channels;
     }
 
 

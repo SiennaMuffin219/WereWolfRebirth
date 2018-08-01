@@ -17,6 +17,8 @@ namespace WereWolfRebirth
     class BotCommands
     {
 
+
+
         private static string nameOfBot = "Alpha Test 42";
         private static string messageOfBot = "Qui veux jouer ?";
         
@@ -33,29 +35,31 @@ namespace WereWolfRebirth
         [Command("init")]
         public async Task Init(CommandContext e)
         {
-            var channels = await e.Guild.GetChannelsAsync();
-            foreach(var channel in channels)
-            {
-                if(channel.Name != "general")
-                {
-                    await channel.DeleteAsync();
-                }
-            }
-            Console.WriteLine(e.Member.Username);
+            // var channels = await e.Guild.GetChannelsAsync();
+            // foreach(var channel in channels)
+            // {
+            //     if(channel.Name != "general")
+            //     {
+            //         await channel.DeleteAsync();
+            //     }
+            // }
+            // Console.WriteLine(e.Member.Username);
             
-            var a = await e.Guild.CreateChannelAsync("Village", ChannelType.Text);
+            // var a = await e.Guild.CreateChannelAsync("Village", ChannelType.Text);
             
 
-            await e.RespondAsync(messageOfBot);
-            // On check dans les messages, le message du bot
-            var messages = await a.GetMessagesAsync();
-            foreach(var m in messages)
-            {   
-                if(m.Author.Username == nameOfBot && m.Content == messageOfBot)
-                {
-                    Console.WriteLine(m.Reactions.Count);
-                }
-            }
+            // await e.RespondAsync(messageOfBot);
+            // // On check dans les messages, le message du bot
+            // var messages = await a.GetMessagesAsync(30);
+            // foreach(var m in messages)
+            // {   
+            //     if(m.Author.Username == e.Client.CurrentUser.Username && m.Content == messageOfBot)
+            //     {
+            //         Console.WriteLine(m.Reactions.Count);
+            //     }
+
+            //     System.Console.WriteLine(m);
+            // }
 
 
             var listChelou = await e.Guild.GetAllMembersAsync(); 
@@ -63,6 +67,10 @@ namespace WereWolfRebirth
             foreach(var player in listChelou)
             {
                 listPlayer.Add((DiscordUser) player);
+
+
+
+                WereWolfRebirth.Environnement.channels.Add
             }
             
 
@@ -79,6 +87,45 @@ namespace WereWolfRebirth
 
         }
         
+        [Command("CreateGuild"), Aliases("go")]
+
+        public async Task CreateGuild(CommandContext e)
+        {
+            var guild = await e.Client.CreateGuildAsync("Loup Garou");
+            var village = await guild.CreateChannelAsync("Village", ChannelType.Text);
+            var loup = await guild.CreateChannelAsync("Loup", ChannelType.Text);
+
+            var inv = await village.CreateInviteAsync();
+            await e.RespondAsync(inv.ToString());
+
+            var botChannel = await guild.CreateChannelAsync("bot", ChannelType.Text);
+            DiscordMessage askMessage = await botChannel.SendMessageAsync("Qui veut jouer ?");
+            System.Threading.Thread.Sleep((int)30E3); // 30 s avant le lancement de la parti
+
+            await askMessage.Reactions.GetEnumerator();
+
+
+            System.Threading.Thread.Sleep((int)1E5); // 100 s avant la destruction du serveur
+
+            await guild.DeleteAsync();
+            
+        }
+
+
+        [Command("Launch"), Aliases("l")]
+        public async Task LaunchGame(CommandContext e)
+        {
+            var listChelou = await e.Guild.GetAllMembersAsync();
+            List<DiscordChannel> listChannel = new List<DiscordChannel>(); 
+            foreach(var p in listChelou)
+            {
+                WereWolfRebirth.Environnement.players.Add((DiscordUser) p);
+
+            }
+        }
+
+
+
         [Command("join")]
         public async Task Join(CommandContext ctx, string channelName)
         {
@@ -88,6 +135,7 @@ namespace WereWolfRebirth
         [Command("night")]
         public async Task Night(CommandContext ctx)
         {
+            
         }
 
 
@@ -101,5 +149,14 @@ namespace WereWolfRebirth
             }
         }
 
+        [Command("disconnect"), Aliases("dis", "dc")]
+        public async Task Disconnect(CommandContext e)
+        {
+            await e.Client.UpdateStatusAsync(user_status: UserStatus.Invisible);
+            e.Client.DebugLogger.LogMessage(LogLevel.Info, "AlphaBot", "Disconnecting from Discord", DateTime.Now);
+            await e.Client.DisconnectAsync();
+            System.Threading.Thread.Sleep(1000);
+            Environment.Exit(0);
+        }
     }
 }
