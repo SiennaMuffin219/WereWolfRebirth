@@ -62,15 +62,7 @@ namespace WereWolfRebirth
             // }
 
 
-            foreach(var j in listPlayer)
-            {
-                if(!j.IsBot && (j.Presence.Status == UserStatus.Online  || j.Presence.Status == UserStatus.DoNotDisturb))
-                {
-                    await e.Guild.CreateRoleAsync(j.Username);
-                    await e.Guild.CreateChannelAsync(j.Username, ChannelType.Text);
-                }
-            }
-
+       
 
         }
         
