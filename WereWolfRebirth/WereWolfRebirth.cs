@@ -110,12 +110,9 @@ namespace WereWolfRebirth
     {
         public static List<DiscordUser> players;
         public static List<DiscordChannel> channels;
-<<<<<<< HEAD
         public static bool wait = true;
 
 
-=======
->>>>>>> 155fb44de4ac5ed94c0e11a8533a633668ff4b4d
     }
 
 
