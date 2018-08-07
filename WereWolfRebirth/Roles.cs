@@ -214,7 +214,7 @@ namespace WereWolfRebirth.Roles
 
         public override string ToString()
         {
-            return Game.langJson.SaviorToString;
+            return Game.langJson.SaviorToString + " \n " + Game.langJson.TownFriendly;
         }
 
 
@@ -230,7 +230,7 @@ namespace WereWolfRebirth.Roles
 
         public override string ToString()
         {
-            return Game.langJson.WitchToString;
+            return Game.langJson.WitchToString + " \n " + Game.langJson.TownFriendly;
         }
     }
 
@@ -242,7 +242,7 @@ namespace WereWolfRebirth.Roles
 
         public override string ToString()
         {
-            return Game.langJson.LittleGirlToString;
+            return Game.langJson.LittleGirlToString + " \n " + Game.langJson.TownFriendly;
         }
     }
 
@@ -254,7 +254,7 @@ namespace WereWolfRebirth.Roles
 
         public override string ToString()
         {
-            return Game.langJson.HunterToString;
+            return Game.langJson.HunterToString + " \n " + Game.langJson.TownFriendly;
         }
     }
 
@@ -266,7 +266,7 @@ namespace WereWolfRebirth.Roles
 
         public override string ToString()
         {
-            return Game.langJson.CupidToString;
+            return Game.langJson.CupidToString + " \n " + Game.langJson.TownFriendly;
         }
     }
 
@@ -278,7 +278,7 @@ namespace WereWolfRebirth.Roles
 
         public override string ToString()
         {
-            return Game.langJson.SeerToString;
+            return Game.langJson.SeerToString + " \n " + Game.langJson.TownFriendly;
         }
     }
 
@@ -290,12 +290,23 @@ namespace WereWolfRebirth.Roles
 
         public override string ToString()
         {
-            return Game.langJson.TalkativeSeerToString;
+            return Game.langJson.TalkativeSeerToString + " \n " + Game.langJson.TownFriendly;
         }
     }
 
     #endregion
 
+    public abstract class Personnage
+    {
+
+        public DiscordUser Me { get; private set; }
+        public bool Alive {get; set;}
+        public Effect bonus = Effect.None;    
+        public Personnage(DiscordUser me) => Me = me;
+    
+
+
+    }
 
 
 

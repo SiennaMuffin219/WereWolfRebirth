@@ -5,19 +5,18 @@ using DSharpPlus.Entities;
 using Newtonsoft.Json;
 using WereWolfRebirth.Enum;
 using WereWolfRebirth.Roles;
+using WereWolfRebirth;
+
 
 namespace WereWolfRebirth.Environment 
 {
     static class Game
     {
         public static Dictionary<string, DiscordChannel> channels;
-        public static Language langJson  = JsonConvert.DeserializeObject<Language>(File.ReadAllText(@"../../../Locale/Fr/lang.json", System.Text.Encoding.UTF8), new JsonSerializerSettings() { Culture = System.Globalization.CultureInfo.GetCultureInfo("fr-FR") });
-
+        public static Language langJson  = JsonConvert.DeserializeObject<Language>(File.ReadAllText(@"./Locale/Fr/lang.json", System.Text.Encoding.UTF8), new JsonSerializerSettings() { Culture = System.Globalization.CultureInfo.GetCultureInfo("fr-FR") });
         public static bool wait = true;
         public static List<Personnage> personnages;
-
         public static Victory victory = Victory.None;
-
         public static void CheckVictory() 
         {
             if (personnages.Exists(x => 

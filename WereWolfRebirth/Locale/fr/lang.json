@@ -1,15 +1,15 @@
 {
     "Lang": "fr",
-    "CitizienToString": "... ben... d'Ítre un villageois... Et le rester le plus longtemps possible.\nPour cela vous devez Èliminer les loups garous qui pourraient dÈcider de **vous** Èliminer et le seul moyen de le faire est de voter ‡ la fin de la journÈe contre celui qui vous semble le plus suspect.\nEt aussi de rÈussir ‡ ce que les autres villageois ne votent pas votre mort.\nAvouez que Áa serait dommage.",
-    "WolfToString": "Vous Ítes un loup-garou. Votre but est d'exterminer, de dÈvorer, d'Ètriper, de dÈcimer tous les villageois et leurs alliÈs.",
-    "HunterToString": "…tant un as de la gachette, **lors de votre mort** (de n'importe qu'elle faÁon que ce soit) vous pouvez tuer la personne de votre choix dans l'assistance",
-    "SaviorToString": "Gr‚ce ‡ vos pouvoirs, vous pouvez choisir une personne (vous compris) **chaque nuit** afin de la protÈger de la mort. Une mÍme personne ne peut pas Ítre protÈgÈe deux nuits de suite.",
-    "WitchToString": "Vos connaissance ÈsotÈriques vous permettent de concocter **2 potions durant la partie**\n - Une potion de vie qui empÍchera la mort de la personne qui a ÈtÈ attaquÈe par les loups cette nuit\n - Une potion de mort qui tuera la personne de votre choix",
-    "SeerToString": "Gr‚ce ‡ vos dons, vous pouvez **chaque nuit** connaÓtre le rÙle d'une personne.",
-    "TalkativeSeerToString": "Gr‚ce ‡ vos dons, vous pouvez **chaque nuit** connaÓtre le rÙle d'une personne. Le rÙle ainsi connu est partagÈ avec le reste des personnes",
-    "LittleGirlToString": "N'arrivant pas ‡ dormir dans ce petit village, vous sortez de votre maison et entendez des bruits Ètranges venant des loups",
-    "CupidToString": "¿ la premiËre nuit, vous choisissez deux personnes qui deviennent amoureuses.",
-    "TownFriendly": "Vous Ítes avec les villageois. Votre but est d'Èliminer les loups.",
+    "CitizienToString": "... ben... d'√©tre un *villageois*... Et le rester le plus longtemps possible.\nPour cela vous devez √©liminer les loups garous qui pourraient d√©cider de **vous** √©liminer et le seul moyen de le faire est de voter √© la fin de la journ√©e contre celui qui vous semble le plus suspect.\nEt aussi de r√©ussir √© ce que les autres villageois ne votent pas votre mort.\nAvouez que √©a serait dommage.",
+    "WolfToString": "Vous √©tes un *loup-garou*. Votre but est d'exterminer, de d√©vorer, d'√©triper, de d√©cimer tous les villageois et leurs alli√©s.",
+    "HunterToString": "Vous Chasseur de profession √©tant un as de la gachette, **lors de votre mort** (de n'importe qu'elle fa√©on que ce soit) vous pouvez tuer la personne de votre choix dans l'assistance",
+    "SaviorToString": "En tant que *salvateur*, vous pouvez choisir une personne (vous compris) **chaque nuit** afin de la prot√©ger de la mort. Une m√©me personne ne peut pas √©tre prot√©g√©e deux nuits de suite.",
+    "WitchToString": "Vos connaissance √©sot√©riques de sorciere vous permettent de concocter **2 potions durant la partie**\n - Une potion de vie qui emp√©chera la mort de la personne qui a √©t√© attaqu√©e par les loups cette nuit\n - Une potion de mort qui tuera la personne de votre choix",
+    "SeerToString": "Gr√¢ce √† vos dons de *voyante*, vous pouvez **chaque nuit** conna√Ætre le r√¥le d'une personne.",
+    "TalkativeSeerToString": "Gr√¢ce √† vos dons de *voyante*, vous pouvez **chaque nuit** conna√Ætre le r√©le d'une personne. Le r√¥le ainsi connu est partag√© avec le reste des personnes",
+    "LittleGirlToString": "N'arrivant pas √† dormir dans ce petit village, vous une *petite fille* sortez de votre maison et entendez des bruits √©tranges venant des loups",
+    "CupidToString": "Durant la premiere nuit, vous *Cupidon* choisissez deux personnes qui deviennent amoureuses.",
+    "TownFriendly": "Vous √©tes avec les autres villageois. Votre but est d'√©liminer les loups.",
     "CharmedMessage": "Si votre amoureux meurt, vous le suivez dans sa mort.",
-    "MayorMessage": "Vous Ítes le maire, en cas d'ÈgalitÈ pendant le vote diurne, votre voix compte double."
+    "MayorMessage": "Vous √©tes le maire, en cas d'√©galit√© pendant le vote diurne, votre voix compte double."
 }
