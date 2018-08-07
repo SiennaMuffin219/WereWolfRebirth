@@ -10,6 +10,7 @@ using DSharpPlus.Interactivity;
 using DSharpPlus.Exceptions;
 using DSharpPlus.CommandsNext;
 using Newtonsoft.Json;
+using WereWolfRebirth.Roles;
 
 namespace WereWolfRebirth
 {
@@ -21,6 +22,7 @@ namespace WereWolfRebirth
 
 
         static void Main(string[] args) => new Program().AsyncMain().GetAwaiter().GetResult();
+
 
         public async Task AsyncMain()
         {
@@ -375,13 +377,46 @@ namespace WereWolfRebirth
 
     static class Game
     {
-        public static List<DiscordUser> players;
         public static List<DiscordChannel> channels;
         
         public static bool wait = true;
         public static List<Personnage> personnages;
 
+        public static Victory victory = Victory.None;
 
+        public static void CheckVictory()
+        {
+            if(personnages.Exists(x => 
+                    x.GetType() == Type.GetType("WereWolfRebirth.Roles.Citizien") || 
+                    x.GetType().IsSubclassOf(Type.GetType("WereWolfRebirth.Roles.Citizien"))))
+            {
+                Citizien.HasWon();
+            }
+
+            if(personnages.Exists(x => 
+                    x.GetType() == Type.GetType("WereWolfRebirth.Roles.Wolf") || 
+                    x.GetType().IsSubclassOf(Type.GetType("WereWolfRebirth.Roles.Wolf"))))           
+            {
+                Wolf.HasWon();
+            }
+
+            #region Not Implemented Yet        
+            // if(personnages.Exists(x => x.bonus == Bonus.Amoureux)       
+            // {
+            //     Lovers.HasWon();
+            // }
+
+        
+            // if(personnages.Exists(x => 
+            //         x.GetType() == Type.GetType("WereWolfRebirth.Roles.PiedPiper") || 
+            //         x.GetType().IsSubclassOf(Type.GetType("WereWolfRebirth.Roles.PiedPiper"))))            {
+            //     PiedPiper.HasWon();
+            // }
+            #endregion
+        
+
+
+        }
     }
 
 
@@ -394,4 +429,23 @@ namespace WereWolfRebirth
         [JsonProperty("logfile")]
         public string logFile { get; private set; }
     }
+
+    public enum Victory
+    {
+        None, // Pas encore terminé
+        Wolf, // Les loups
+        Town, // Le Village
+        Lovers, // Les Amoureux
+
+        PiedPiper, // Joueur de flute
+
+    }
+
+    public enum Moments
+    {
+        Voting,
+        
+    }
+
 }
+

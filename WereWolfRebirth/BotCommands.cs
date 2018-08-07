@@ -13,13 +13,14 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Net.Abstractions;
 using DSharpPlus.Net;
 using Newtonsoft.Json;
+using WereWolfRebirth.Roles;
 
 namespace WereWolfRebirth
 {
     class BotCommands
     {
 
-        [Command("ping")]
+        [Command("ping"), Description("")]
         public async Task Ping(CommandContext e)
         {
             await e.TriggerTypingAsync();
@@ -70,11 +71,9 @@ namespace WereWolfRebirth
 
 
             Console.WriteLine(11);
+            List<DiscordUser> players = new List<DiscordUser>();
             try
             {
-                Game.players = new List<DiscordUser>();
-
-
                 while (Game.wait)
                 {
                     Console.WriteLine("Boucle");
@@ -92,10 +91,10 @@ namespace WereWolfRebirth
                     {
                         Console.WriteLine(12);
 
-                        if(!Game.players.Contains(react.User))
-                        {
-                            Game.players.Add(react.User);
-                        }
+                       // if(!players.Contains(react.User))
+                       // {
+                            players.Add(react.User);
+                       // }
 
 
 
@@ -115,35 +114,68 @@ namespace WereWolfRebirth
 
 
             Console.WriteLine(13);
+            try
+            {
+                GameBuilder.Debug();
+                
+            }
+            catch (System.Exception ex)
+            {
+                
+                System.Console.WriteLine(ex);
+            }
+            Console.WriteLine(13.2);
 
-            await RoleAssignment(guild);
-
-            System.Threading.Thread.Sleep((int)1E5); // 100 s avant la destruction du serveur
+            await RoleAssignment(guild, players);
+            
+            GameBuilder.Debug();
             Console.WriteLine(14);
 
+            System.Threading.Thread.Sleep((int)1E5); // 100 s avant la destruction du serveur
+            Console.WriteLine("DELETATION");
+            
             await guild.DeleteAsync();
 
         }
 
 
-        public async Task RoleAssignment(DiscordGuild guild)
+        public async Task RoleAssignment(DiscordGuild guild, List<DiscordUser> players)
         {
-            Game.personnages = Personnage.CreatePersonnages(Game.players);
-            
-            DiscordChannel chPerso = await guild.CreateChannelAsync("Salon Personnel", ChannelType.Category);
-
-            foreach (var player in Game.personnages)
+            try
             {
-                DiscordChannel currentCh = null;
-                foreach (var otherPlayer in Game.personnages.FindAll(x => x.Me != player.Me))
+
+                for(int i = 0; i < 15; i++)
                 {
-                    currentCh = await guild.CreateChannelAsync(player.Me.Username, ChannelType.Text, chPerso);
-                    await currentCh.AddOverwriteAsync(otherPlayer.Me as DiscordMember, Permissions.None, Permissions.AccessChannels);
+                    players.Add(players[0]);
                 }
-                await currentCh.SendMessageAsync(player.ToString());
 
+
+                GameBuilder.CreatePersonnages(players);
+                
+                DiscordChannel chsPerso = await guild.CreateChannelAsync("Salon Personnel", ChannelType.Category);
+
+                foreach (var player in Game.personnages)
+                {
+                    DiscordChannel currentTextCh = null;
+                    DiscordChannel currentVoiceCh = null;
+                    foreach (var otherPlayer in Game.personnages.FindAll(x => x.Me != player.Me))
+                    {
+                        currentTextCh = await guild.CreateChannelAsync(player.Me.Username, ChannelType.Text, chsPerso);
+                        await currentTextCh.AddOverwriteAsync(otherPlayer.Me as DiscordMember, Permissions.None, Permissions.AccessChannels);
+
+                        currentVoiceCh = await guild.CreateChannelAsync(player.Me.Username, ChannelType.Voice, chsPerso);
+                    
+                        await currentVoiceCh.PlaceMemberAsync(player.Me as DiscordMember);
+
+                    }
+                    await currentTextCh.SendMessageAsync(player.ToString());
+
+                }
             }
-
+            catch(SystemException ex)
+            {
+                System.Console.WriteLine(ex);
+            }
 
         }
 
