@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using DSharpPlus;
-using DSharpPlus.Entities;
-using WereWolfRebirth.Roles;
+﻿using DSharpPlus.Entities;
+using WereWolfRebirth.Enum;
 
 public abstract class Personnage
 {
@@ -13,9 +10,6 @@ public abstract class Personnage
     public Personnage(DiscordUser me) => Me = me;
   
 
-
-
-    
 
 
 

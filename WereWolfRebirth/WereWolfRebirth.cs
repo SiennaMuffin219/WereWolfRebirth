@@ -11,6 +11,7 @@ using DSharpPlus.Exceptions;
 using DSharpPlus.CommandsNext;
 using Newtonsoft.Json;
 using WereWolfRebirth.Roles;
+using WereWolfRebirth.Enum;
 
 namespace WereWolfRebirth
 {
@@ -121,7 +122,14 @@ namespace WereWolfRebirth
         }
         private Task Client_VoiceStateUpdated(VoiceStateUpdateEventArgs e)
         {
-            e.Client.DebugLogger.LogMessage(LogLevel.Info, "BotApp", $"{e.User.Username} updated voice in {e.Channel.Name} ({e.Guild.Name})", DateTime.Now);
+            try
+            {
+                e.Client.DebugLogger.LogMessage(LogLevel.Info, "BotApp", $"{e.User.Username} updated voice in {e.Channel.Name} ({e.Guild.Name})", DateTime.Now);
+            }
+            catch (Exception) 
+            {
+                System.Console.WriteLine();
+            }
             return Task.CompletedTask;
         }
         private Task Client_VoiceServerUpdated(VoiceServerUpdateEventArgs e)
@@ -370,54 +378,12 @@ namespace WereWolfRebirth
             }
             Console.WriteLine(e.Message);
 
+
             Console.ResetColor();
         }
     }
         #endregion
 
-    static class Game
-    {
-        public static List<DiscordChannel> channels;
-        
-        public static bool wait = true;
-        public static List<Personnage> personnages;
-
-        public static Victory victory = Victory.None;
-
-        public static void CheckVictory()
-        {
-            if(personnages.Exists(x => 
-                    x.GetType() == Type.GetType("WereWolfRebirth.Roles.Citizien") || 
-                    x.GetType().IsSubclassOf(Type.GetType("WereWolfRebirth.Roles.Citizien"))))
-            {
-                Citizien.HasWon();
-            }
-
-            if(personnages.Exists(x => 
-                    x.GetType() == Type.GetType("WereWolfRebirth.Roles.Wolf") || 
-                    x.GetType().IsSubclassOf(Type.GetType("WereWolfRebirth.Roles.Wolf"))))           
-            {
-                Wolf.HasWon();
-            }
-
-            #region Not Implemented Yet        
-            // if(personnages.Exists(x => x.bonus == Bonus.Amoureux)       
-            // {
-            //     Lovers.HasWon();
-            // }
-
-        
-            // if(personnages.Exists(x => 
-            //         x.GetType() == Type.GetType("WereWolfRebirth.Roles.PiedPiper") || 
-            //         x.GetType().IsSubclassOf(Type.GetType("WereWolfRebirth.Roles.PiedPiper"))))            {
-            //     PiedPiper.HasWon();
-            // }
-            #endregion
-        
-
-
-        }
-    }
 
 
     struct Config
@@ -430,22 +396,6 @@ namespace WereWolfRebirth
         public string logFile { get; private set; }
     }
 
-    public enum Victory
-    {
-        None, // Pas encore terminé
-        Wolf, // Les loups
-        Town, // Le Village
-        Lovers, // Les Amoureux
-
-        PiedPiper, // Joueur de flute
-
-    }
-
-    public enum Moments
-    {
-        Voting,
-        
-    }
 
 }
 

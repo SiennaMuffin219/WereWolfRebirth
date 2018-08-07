@@ -14,6 +14,7 @@ using DSharpPlus.Net.Abstractions;
 using DSharpPlus.Net;
 using Newtonsoft.Json;
 using WereWolfRebirth.Roles;
+using WereWolfRebirth.Environment;
 
 namespace WereWolfRebirth
 {
@@ -38,18 +39,21 @@ namespace WereWolfRebirth
             {
                 try
                 {
-                    var guildTask= e.Client.CreateGuildAsync("Loup Garou");
-                    guild = guildTask.GetAwaiter().GetResult();
+                    var guildTask = await e.Client.CreateGuildAsync("Loup Garou");
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
                 }
             }
+
+            foreach (var ch in guild.Channels)
+            {
+                await ch.DeleteAsync("Faire de la place");
+            }
             Console.WriteLine(2);
             var village = await guild.CreateChannelAsync("Village", ChannelType.Text);
             Console.WriteLine(3);
-            var loup = await guild.CreateChannelAsync("Loup", ChannelType.Text);
             Console.WriteLine(4);
             await e.TriggerTypingAsync();
             Console.WriteLine(5);
@@ -91,10 +95,10 @@ namespace WereWolfRebirth
                     {
                         Console.WriteLine(12);
 
-                       // if(!players.Contains(react.User))
-                       // {
+                       if(!players.Contains(react.User))
+                       {
                             players.Add(react.User);
-                       // }
+                       }
 
 
 
@@ -102,7 +106,6 @@ namespace WereWolfRebirth
                         end = DateTime.Now.AddSeconds(10);
                     }
                 }
-
 
 
 
@@ -144,32 +147,32 @@ namespace WereWolfRebirth
             try
             {
 
-                for(int i = 0; i < 15; i++)
-                {
-                    players.Add(players[0]);
-                }
+                // for(int i = 0; i < 15; i++)
+                // {
+                //     players.Add(players[0]);
+                // }
 
+                
 
                 GameBuilder.CreatePersonnages(players);
                 
-                DiscordChannel chsPerso = await guild.CreateChannelAsync("Salon Personnel", ChannelType.Category);
+                DiscordChannel chsPerso = await guild.CreateChannelAsync("Salons Personnels", ChannelType.Category);
+                DiscordChannel chsCommun = await guild.CreateChannelAsync("Salons Communs", ChannelType.Category);
+                var chLoup = await guild.CreateChannelAsync("Loup", ChannelType.Text, chsCommun);
+
 
                 foreach (var player in Game.personnages)
                 {
-                    DiscordChannel currentTextCh = null;
-                    DiscordChannel currentVoiceCh = null;
+                    DiscordChannel currentTextCh = await guild.CreateChannelAsync(player.Me.Username, ChannelType.Text, chsPerso);
+                    DiscordChannel currentVoiceCh = await guild.CreateChannelAsync(player.Me.Username, ChannelType.Voice, chsPerso);
+                    await currentVoiceCh.PlaceMemberAsync(player.Me as DiscordMember);
                     foreach (var otherPlayer in Game.personnages.FindAll(x => x.Me != player.Me))
                     {
-                        currentTextCh = await guild.CreateChannelAsync(player.Me.Username, ChannelType.Text, chsPerso);
                         await currentTextCh.AddOverwriteAsync(otherPlayer.Me as DiscordMember, Permissions.None, Permissions.AccessChannels);
-
-                        currentVoiceCh = await guild.CreateChannelAsync(player.Me.Username, ChannelType.Voice, chsPerso);
-                    
-                        await currentVoiceCh.PlaceMemberAsync(player.Me as DiscordMember);
-
+                        await currentVoiceCh.AddOverwriteAsync(otherPlayer.Me as DiscordMember, Permissions.None, Permissions.AccessChannels);
                     }
-                    await currentTextCh.SendMessageAsync(player.ToString());
 
+                    await currentTextCh.SendMessageAsync(player.ToString());
                 }
             }
             catch(SystemException ex)
@@ -184,7 +187,7 @@ namespace WereWolfRebirth
         [Command("stopInvite"), Aliases("stop", "sinv", "stopinv")]
         public async Task StopInvite(CommandContext ctx)
         {
-            WereWolfRebirth.Game.wait = false;
+            Game.wait = false;
             await Task.CompletedTask;
         }
 
@@ -198,7 +201,7 @@ namespace WereWolfRebirth
             e.Client.DebugLogger.LogMessage(LogLevel.Info, "AlphaBot", "Disconnecting from Discord", DateTime.Now);
             await e.Client.DisconnectAsync();
             System.Threading.Thread.Sleep(1000);
-            Environment.Exit(0);
+            System.Environment.Exit(0);
         }
     }
 }

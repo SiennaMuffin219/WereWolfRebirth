@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using DSharpPlus.Entities;
+using WereWolfRebirth.Enum;
+using WereWolfRebirth.Environment;
+
+using System.Resources;
+using Newtonsoft.Json;
 
 namespace WereWolfRebirth.Roles
 {
@@ -29,32 +34,32 @@ namespace WereWolfRebirth.Roles
                     
                     switch(roles[nbRand])
                     {
-                    case Role.Villageois:
+                    case Role.Citizien:
                         Game.personnages.Add(new Citizien(players[userId]));
                     break;
-                    case Role.Chasseur:
+                    case Role.Hunter:
                         Game.personnages.Add(new Hunter(players[userId]));
                     break;
-                    case Role.Cupidon:
+                    case Role.Cupid:
                         Game.personnages.Add(new Cupidon(players[userId]));
                     break;
-                    case Role.Sorciere:
+                    case Role.Witch:
                         Game.personnages.Add(new Witch(players[userId]));
                     break;
-                    case Role.Salvateur:
+                    case Role.Savior:
                         Game.personnages.Add(new Salvator(players[userId]));
                     break;
-                    case Role.Voyante:
+                    case Role.Seer:
                         Game.personnages.Add(new Seer(players[userId]));
                     break;                  
-                    case Role.VoyanteBavarde:
+                    case Role.TalkativeSeer:
                         Game.personnages.Add(new TalkativeSeer(players[userId]));
                     break;
-                    case Role.PetiteFille:
+                    case Role.LittleGirl:
                         Game.personnages.Add(new LittleGirl(players[userId]));
                     break;
 
-                    case Role.Loup:
+                    case Role.Wolf:
                         Game.personnages.Add(new Wolf(players[userId]));
                     break;
 
@@ -84,29 +89,29 @@ namespace WereWolfRebirth.Roles
                 switch (i)
                 {
                     case 1:
-                        RoleList.Add(Role.Villageois); break;
+                        RoleList.Add(Role.Citizien); break;
                     case 2:
-                        RoleList.Add(Role.Loup); break;
+                        RoleList.Add(Role.Wolf); break;
                     case 3:
-                        RoleList.Add(Role.Voyante); break;
+                        RoleList.Add(Role.Seer); break;
                     case 4:
-                        RoleList.Add(Role.Loup); break;
+                        RoleList.Add(Role.Wolf); break;
                     case 5:
-                        RoleList.Add(Role.Salvateur);
-                        RoleList.Add(Role.Villageois);
-                        RoleList.Add(Role.Loup); break;
+                        RoleList.Add(Role.Savior);
+                        RoleList.Add(Role.Citizien);
+                        RoleList.Add(Role.Wolf); break;
                     case 6:
-                        RoleList.Add(Role.PetiteFille); break;
+                        RoleList.Add(Role.LittleGirl); break;
                     case 7:
-                        RoleList.Add(Role.Sorciere); break;
+                        RoleList.Add(Role.Witch); break;
                     case 8:
-                        RoleList.Add(Role.Chasseur); break;
+                        RoleList.Add(Role.Hunter); break;
                     case 9:
-                        RoleList.Add(Role.Loup); break;
+                        RoleList.Add(Role.Wolf); break;
                     case 10:
-                        RoleList.Add(Role.Cupidon); break;
+                        RoleList.Add(Role.Cupid); break;
                     default:
-                        RoleList.Add(i % 3 == 0 ? Role.Loup : Role.Villageois); break;
+                        RoleList.Add(i % 3 == 0 ? Role.Wolf : Role.Citizien); break;
                 }
             }
             return RoleList;
@@ -155,6 +160,18 @@ namespace WereWolfRebirth.Roles
                 x.GetType().IsSubclassOf(Type.GetType("WereWolfRebirth.Roles.Citizien")));        
         
         }
+
+
+        // public override string ToString()
+        // {
+        //     String str = null;
+        //     switch()
+        //     {
+
+        //     }
+        //     str = Game.langJson.Role.Wolf.fr;             
+
+        // }
     }
     
     
@@ -244,31 +261,5 @@ namespace WereWolfRebirth.Roles
 
     
 
-    public enum Role 
-    {
-        Villageois,
-        Voyante,
-        VoyanteBavarde,
-        PetiteFille,
-        Chasseur,
-        Sorciere,
-        Cupidon,
-        Salvateur,
-        
-        Loup,
-
-        None
-
-    }
-
-    
-    public enum Bonus
-    {
-        None = 0,
-        Amoureux = 1, 
-        Capitaine = 2,
-        Charmed = 4
-        
-    }
 
 }

@@ -1,0 +1,12 @@
+{
+    "lang": "fr",
+    "wolf-toString" : "... ben... d'être un villageois... Et le rester le plus longtemps possible.\nPour cela vous devez éliminer les loups garous qui pourraient décider de **vous** éliminer et le seul moyen de le faire est de voter à la fin de la journée contre celui qui vous semble le plus suspect.\nEt aussi de réussir à ce que les autres villageois ne votent pas votre mort.\nAvouez que ça serait dommage.",
+    "citizien-toString" : "",
+    "hunter-toString" : "",
+    "savior-toString" : "",
+    "witch-toString" : "",
+    "seer-toString" : "",
+    "talkativeSeer-toString" : "",
+    "littleGirl-toString" : "",
+    "cupid-toString" : ""
+  }
