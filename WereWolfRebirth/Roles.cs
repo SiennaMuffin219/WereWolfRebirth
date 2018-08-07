@@ -17,51 +17,51 @@ namespace WereWolfRebirth.Roles
         {
             try
             {
-                
-                
+
+
                 List<Role> roles = CreateRoles(players.Count);
                 Random rand = new Random(DateTime.Now.Millisecond);
-                int userId = 0;    
+                int userId = 0;
 
 
                 Game.personnages = new List<Personnage>();
-            
-                while(players.Count != 0)
-                {
-                    int nbRand =  rand.Next(roles.Count);
-                    
-                    
-                    
-                    switch(roles[nbRand])
-                    {
-                    case Role.Citizien:
-                        Game.personnages.Add(new Citizien(players[userId]));
-                    break;
-                    case Role.Hunter:
-                        Game.personnages.Add(new Hunter(players[userId]));
-                    break;
-                    case Role.Cupid:
-                        Game.personnages.Add(new Cupidon(players[userId]));
-                    break;
-                    case Role.Witch:
-                        Game.personnages.Add(new Witch(players[userId]));
-                    break;
-                    case Role.Savior:
-                        Game.personnages.Add(new Salvator(players[userId]));
-                    break;
-                    case Role.Seer:
-                        Game.personnages.Add(new Seer(players[userId]));
-                    break;                  
-                    case Role.TalkativeSeer:
-                        Game.personnages.Add(new TalkativeSeer(players[userId]));
-                    break;
-                    case Role.LittleGirl:
-                        Game.personnages.Add(new LittleGirl(players[userId]));
-                    break;
 
-                    case Role.Wolf:
-                        Game.personnages.Add(new Wolf(players[userId]));
-                    break;
+                while (players.Count != 0)
+                {
+                    int nbRand = rand.Next(roles.Count);
+
+
+
+                    switch (roles[nbRand])
+                    {
+                        case Role.Citizien:
+                            Game.personnages.Add(new Citizien(players[userId]));
+                            break;
+                        case Role.Hunter:
+                            Game.personnages.Add(new Hunter(players[userId]));
+                            break;
+                        case Role.Cupid:
+                            Game.personnages.Add(new Cupidon(players[userId]));
+                            break;
+                        case Role.Witch:
+                            Game.personnages.Add(new Witch(players[userId]));
+                            break;
+                        case Role.Savior:
+                            Game.personnages.Add(new Salvator(players[userId]));
+                            break;
+                        case Role.Seer:
+                            Game.personnages.Add(new Seer(players[userId]));
+                            break;
+                        case Role.TalkativeSeer:
+                            Game.personnages.Add(new TalkativeSeer(players[userId]));
+                            break;
+                        case Role.LittleGirl:
+                            Game.personnages.Add(new LittleGirl(players[userId]));
+                            break;
+
+                        case Role.Wolf:
+                            Game.personnages.Add(new Wolf(players[userId]));
+                            break;
 
                     }
                     roles.RemoveAt(nbRand);
@@ -71,12 +71,12 @@ namespace WereWolfRebirth.Roles
             }
             catch (System.Exception ex1)
             {
-                
+
                 System.Console.WriteLine(ex1);
             }
 
 
-        
+
         }
 
 
@@ -119,7 +119,7 @@ namespace WereWolfRebirth.Roles
 
         static public void Debug()
         {
-            if(Game.personnages is null)
+            if (Game.personnages is null)
             {
                 Console.WriteLine("Il n'y a aucun personnage joueur dans le jeu");
             }
@@ -127,7 +127,7 @@ namespace WereWolfRebirth.Roles
             {
 
                 int i = 0;
-                foreach(Personnage p in Game.personnages)
+                foreach (Personnage p in Game.personnages)
                 {
                     Console.WriteLine(i + " : " + p.ToString());
                     i++;
@@ -145,66 +145,66 @@ namespace WereWolfRebirth.Roles
     class Wolf : Personnage
     {
         public Wolf(DiscordUser me) : base(me)
-        {}
+        { }
 
         public void doRole()
         {
             throw new NotImplementedException();
         }
 
-        
-        public static bool HasWon() 
+
+        public static bool HasWon()
         {
             return !Game.personnages.Exists(x =>
                 x.GetType() == Type.GetType("WereWolfRebirth.Roles.Citizien") ||
-                x.GetType().IsSubclassOf(Type.GetType("WereWolfRebirth.Roles.Citizien")));        
-        
+                x.GetType() == Type.GetType("WereWolfRebirth.Roles.PiedPiper") ||
+                x.GetType().IsSubclassOf(Type.GetType("WereWolfRebirth.Roles.Citizien")));
+
         }
 
 
-        // public override string ToString()
-        // {
-        //     String str = null;
-        //     switch()
-        //     {
+        public override string ToString()
+        {
+            return Game.langJson.WolfToString;
+        }
 
-        //     }
-        //     str = Game.langJson.Role.Wolf.fr;             
-
-        // }
     }
-    
-    
-    class Citizien :  Personnage
+
+
+    class Citizien : Personnage
     {
 
 
         public Citizien(DiscordUser me) : base(me)
-        {}
+        { }
 
         public void doRole()
         {
-            
+
         }
 
-        public static  bool HasWon() 
+        public static bool HasWon()
         {
             return !Game.personnages.Exists(x =>
                 x.GetType() == Type.GetType("WereWolfRebirth.Roles.Wolf") ||
-                x.GetType().IsSubclassOf(Type.GetType("WereWolfRebirth.Roles.Wolf")));        
+                x.GetType().IsSubclassOf(Type.GetType("WereWolfRebirth.Roles.Wolf")));
         }
 
-   
+        public override string ToString()
+        {
+            return Game.langJson.CitizienToString;
+        }
+
     }
 
 
-    
+
     class Salvator : Citizien
     {
         public Salvator(DiscordUser me) : base(me)
         {
         }
-    
+
         public new void doRole()
         {
             throw new NotImplementedException();
@@ -212,54 +212,91 @@ namespace WereWolfRebirth.Roles
 
         public static new bool HasWon() => Citizien.HasWon();
 
+        public override string ToString()
+        {
+            return Game.langJson.SaviorToString;
+        }
+
+
+
     }
 
 
     class Witch : Citizien
     {
         public Witch(DiscordUser me) : base(me)
-        {}
+        { }
         public static new bool HasWon() => Citizien.HasWon();
+
+        public override string ToString()
+        {
+            return Game.langJson.WitchToString;
+        }
     }
 
     class LittleGirl : Citizien
     {
         public LittleGirl(DiscordUser me) : base(me)
-        {}
+        { }
         public static new bool HasWon() => Citizien.HasWon();
+
+        public override string ToString()
+        {
+            return Game.langJson.LittleGirlToString;
+        }
     }
 
     class Hunter : Citizien
     {
         public Hunter(DiscordUser me) : base(me)
-        {}
+        { }
         public static new bool HasWon() => Citizien.HasWon();
+
+        public override string ToString()
+        {
+            return Game.langJson.HunterToString;
+        }
     }
 
     class Cupidon : Citizien
     {
         public Cupidon(DiscordUser me) : base(me)
-        {}
+        { }
         public static new bool HasWon() => Citizien.HasWon();
+
+        public override string ToString()
+        {
+            return Game.langJson.CupidToString;
+        }
     }
 
     class Seer : Citizien
     {
         public Seer(DiscordUser me) : base(me)
-        {}
+        { }
         public static new bool HasWon() => Citizien.HasWon();
+
+        public override string ToString()
+        {
+            return Game.langJson.SeerToString;
+        }
     }
 
     class TalkativeSeer : Seer
     {
         public TalkativeSeer(DiscordUser me) : base(me)
-        {}
-        public static new  bool HasWon() => Seer.HasWon();
+        { }
+        public static new bool HasWon() => Seer.HasWon();
+
+        public override string ToString()
+        {
+            return Game.langJson.TalkativeSeerToString;
+        }
     }
 
     #endregion
 
-    
+
 
 
 }

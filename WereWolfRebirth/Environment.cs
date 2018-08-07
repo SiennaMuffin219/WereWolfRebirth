@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using DSharpPlus.Entities;
 using Newtonsoft.Json;
 using WereWolfRebirth.Enum;
@@ -10,14 +11,14 @@ namespace WereWolfRebirth.Environment
     static class Game
     {
         public static Dictionary<string, DiscordChannel> channels;
-        public static dynamic langJson = JsonConvert.DeserializeObject(System.IO.File.ReadAllText(@"./lang.json"));
+        public static Language langJson  = JsonConvert.DeserializeObject<Language>(File.ReadAllText(@"../../../Locale/Fr/lang.json", System.Text.Encoding.UTF8), new JsonSerializerSettings() { Culture = System.Globalization.CultureInfo.GetCultureInfo("fr-FR") });
 
         public static bool wait = true;
         public static List<Personnage> personnages;
 
         public static Victory victory = Victory.None;
 
-        public static void CheckVictory()
+        public static void CheckVictory() 
         {
             if (personnages.Exists(x => 
                     x.GetType() == Type.GetType("WereWolfRebirth.Roles.Citizien") || 

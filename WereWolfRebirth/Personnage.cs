@@ -6,7 +6,7 @@ public abstract class Personnage
 
     public DiscordUser Me { get; private set; }
     public bool Alive {get; set;}
-    public Bonus bonus = Bonus.None;    
+    public Effect bonus = Effect.None;    
     public Personnage(DiscordUser me) => Me = me;
   
 

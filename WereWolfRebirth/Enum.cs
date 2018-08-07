@@ -4,39 +4,39 @@ namespace WereWolfRebirth.Enum
 {
     public enum Role 
     {
-        Citizien,
-        Seer,
-        TalkativeSeer,
-        LittleGirl,
-        Hunter,
-        Witch,
-        Cupid,
-        Savior,
+        Citizien,       // Villageois
+        Seer,           // Voyante
+        TalkativeSeer,  // Voyante bavarde
+        LittleGirl,     // Petite Fille
+        Hunter,         // Chasseur
+        Witch,          // Sorcière
+        Cupid,          // Cupidon
+        Savior,         // Salvateur
         
-        Wolf,
+        Wolf,           // Loup
 
-        None
+        None            // None
 
     }
 
     
-    public enum Bonus
+    public enum Effect
     {
         None = 0,
         Lover = 1, 
         Mayor = 2,
-        Charmed = 4
+        // Charmed = 4
         
     }
 
-        public enum Victory
+    public enum Victory
     {
-        None, // Pas encore terminé
-        Wolf, // Les loups
-        Town, // Le Village
+        None,   // Pas encore terminé
+        Wolf,   // Les loups
+        Town,   // Le Village
         Lovers, // Les Amoureux
 
-        PiedPiper, // Joueur de flute
+        //  PiedPiper, // Joueur de flute
 
     }
 

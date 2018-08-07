@@ -39,7 +39,7 @@ namespace WereWolfRebirth
             {
                 try
                 {
-                    var guildTask = await e.Client.CreateGuildAsync("Loup Garou");
+                    guild = await e.Client.CreateGuildAsync("Loup Garou");
                 }
                 catch (Exception ex)
                 {
