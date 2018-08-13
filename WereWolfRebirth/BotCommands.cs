@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
-using DSharpPlus;
-using DSharpPlus.Entities;
-using DSharpPlus.EventArgs;
-using DSharpPlus.Interactivity;
-using DSharpPlus.Exceptions;
+﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Net.Abstractions;
-using DSharpPlus.Net;
-using Newtonsoft.Json;
+using DSharpPlus.Entities;
+using DSharpPlus.Interactivity;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using WereWolfRebirth.Env;
 using WereWolfRebirth.Roles;
-using WereWolfRebirth.Environment;
 
 namespace WereWolfRebirth
 {
@@ -30,16 +23,15 @@ namespace WereWolfRebirth
 
 
         [Command("CreateGuild"), Aliases("go")]
-
         public async Task CreateGuild(CommandContext e)
         {
+            Game.Client = e.Client;
             Console.WriteLine(1);
-            DiscordGuild guild = null;
-            while (guild is null)
+            while (Game.guild == null)
             {
                 try
                 {
-                    guild = await e.Client.CreateGuildAsync("Loup Garou");
+                    Game.guild = e.Client.CreateGuildAsync("Loup Garou").GetAwaiter().GetResult();
                 }
                 catch (Exception ex)
                 {
@@ -47,42 +39,42 @@ namespace WereWolfRebirth
                 }
             }
 
-            foreach (var ch in guild.Channels)
-            {
-                await ch.DeleteAsync("Faire de la place");
-            }
-            Console.WriteLine(2);
-            var village = await guild.CreateChannelAsync("Village", ChannelType.Text);
-            Console.WriteLine(3);
-            Console.WriteLine(4);
+            Console.WriteLine("Guild Created");
+
+
+            Game.DiscordChannels = new Dictionary<string, DiscordChannel>();
+
+            Console.WriteLine("Delatation faite");
+
+
+      
             await e.TriggerTypingAsync();
-            Console.WriteLine(5);
-            var inv = await village.CreateInviteAsync();
-            Console.WriteLine(6);
 
-            await e.RespondAsync(inv.ToString());
 
-            var botChannel = await guild.CreateChannelAsync("bot", ChannelType.Text);
-            Console.WriteLine(7);
-            DiscordMessage askMessage = await botChannel.SendMessageAsync("Qui veut jouer ?");
-            Console.WriteLine(8);
 
-            Console.WriteLine(9);
+
+            DiscordChannel generalChannel = Game.guild.GetDefaultChannel();
+            await generalChannel.ModifyAsync("Bot");
+            Game.DiscordChannels.Add("bot", generalChannel);
+
+            DiscordInvite inv = await generalChannel.CreateInviteAsync();
+
+            DiscordMessage msgInv = await e.RespondAsync(inv.ToString());
+           
+            DiscordMessage askMessage = await generalChannel.SendMessageAsync("Qui veut jouer ?");
+
             var interact = e.Client.GetInteractivityModule();
-            Console.WriteLine(10);
 
             DateTime end = DateTime.Now.AddSeconds(10);
 
 
-            Console.WriteLine(11);
             List<DiscordUser> players = new List<DiscordUser>();
             try
             {
                 while (Game.wait)
                 {
                     Console.WriteLine("Boucle");
-                    Console.WriteLine(end - DateTime.Now);
-                    Console.WriteLine(DateTime.Now.ToString());
+
                     if (DateTime.Now >= end)
                     {
                         Console.WriteLine("Couper");
@@ -90,25 +82,55 @@ namespace WereWolfRebirth
                         break;
                     }
 
-                    var react = await interact.WaitForMessageReactionAsync(askMessage, null, new TimeSpan(0, 0, 10));
+                    ReactionContext react = await interact.WaitForMessageReactionAsync(askMessage, null, new TimeSpan(0, 0, 10));
                     if (!(react is null))
                     {
-                        Console.WriteLine(12);
 
-                       if(!players.Contains(react.User))
-                       {
+                        if (!players.Contains(react.User))
+                        {
                             players.Add(react.User);
-                       }
-
-
-
-                        Console.WriteLine(react.User.Username);
-                        end = DateTime.Now.AddSeconds(10);
+                            end = DateTime.Now.AddSeconds(10);
+                            Console.WriteLine(react.User.Username);
+                        }
                     }
                 }
 
 
+                #region Roles
 
+                DiscordRole adminRole = await Game.guild.CreateRoleAsync("Bot", Permissions.Administrator,
+                    new DiscordColor("#EE0000"), true, true, "Role Bot");
+
+                Permissions playerPerms = Game.CreatePerms(Permissions.SendMessages, Permissions.ReadMessageHistory, Permissions.AddReactions);
+
+                DiscordRole playerRole = await Game.guild.CreateRoleAsync("Joueur", playerPerms,
+                    new DiscordColor("#1de020"), true, true, "Role Joueur");
+
+
+                Permissions spectPerms = Game.CreatePerms(Permissions.AccessChannels, Permissions.ReadMessageHistory);
+                DiscordRole spectRole = await Game.guild.CreateRoleAsync("Spectateur", spectPerms,
+                    new DiscordColor("#7200a3"), true, false, "Role spectateur");
+
+                await Game.guild.UpdateRoleAsync(Game.guild.EveryoneRole, permissions: Permissions.AccessChannels);
+
+
+                foreach (DiscordMember member in await Game.guild.GetAllMembersAsync())
+                {
+                    if (players.Contains(member))
+                    {
+                        await member.GrantRoleAsync(playerRole);
+                    }
+                    else if (member == Game.guild.CurrentMember)
+                    {
+                        await Game.guild.CurrentMember.GrantRoleAsync(adminRole);
+                    }
+                    else
+                    {
+                        await member.GrantRoleAsync(spectRole);
+                    }
+                }
+
+                #endregion
             }
             catch (Exception ex)
             {
@@ -120,68 +142,112 @@ namespace WereWolfRebirth
             try
             {
                 GameBuilder.Debug();
-                
             }
             catch (System.Exception ex)
             {
-                
                 System.Console.WriteLine(ex);
             }
-            Console.WriteLine(13.2);
 
-            await RoleAssignment(guild, players);
-            
-            GameBuilder.Debug();
-            Console.WriteLine(14);
 
-            System.Threading.Thread.Sleep((int)1E5); // 100 s avant la destruction du serveur
-            Console.WriteLine("DELETATION");
-            
-            await guild.DeleteAsync();
+            while (Game.guild.Channels.Count > 0)
+            {
+                Console.WriteLine(Game.guild.Channels[0].Name);
+                await Game.guild.Channels[0].DeleteAsync();
+            }
+
+            await RoleAssignment(msgInv, e, players);
+            await CreateEmojies(e,players);
+        }
+
+
+        public async Task CreateEmojies(CommandContext e,List<DiscordUser>  players)
+        {
+
 
         }
 
 
-        public async Task RoleAssignment(DiscordGuild guild, List<DiscordUser> players)
+        //public async Task AskVote(CommandContext e)
+        //{
+        //    DiscordMessage ask = Game.guild
+        //    e.Client.GetInteractivityModule().CollectReactionsAsync();
+        //}
+
+
+        public async Task RoleAssignment(DiscordMessage msgInv, CommandContext e, List<DiscordUser> players)
         {
+      
             try
             {
-
-                // for(int i = 0; i < 15; i++)
-                // {
-                //     players.Add(players[0]);
-                // }
-
-                
-
+                Console.WriteLine("RA : 1");
                 GameBuilder.CreatePersonnages(players);
-                
-                DiscordChannel chsPerso = await guild.CreateChannelAsync("Salons Personnels", ChannelType.Category);
-                DiscordChannel chsCommun = await guild.CreateChannelAsync("Salons Communs", ChannelType.Category);
-                var chLoup = await guild.CreateChannelAsync("Loup", ChannelType.Text, chsCommun);
+
+                Console.WriteLine("RA : 2");
+                DiscordChannel chsPerso = await Game.guild.CreateChannelAsync("Salons Personnels", ChannelType.Category);
+                DiscordChannel chsCommun = await Game.guild.CreateChannelAsync("Salons Communs", ChannelType.Category);
+
+                Console.WriteLine("RA : 3");
+                Game.DiscordChannels.Add("grpCommun", chsCommun);
+                Game.DiscordChannels.Add("grpPerso", chsPerso);
 
 
-                foreach (var player in Game.personnages)
+
+                Console.WriteLine("RA : 4");
+                DiscordChannel village = await Game.guild.CreateChannelAsync("Village", ChannelType.Text, chsCommun);
+                DiscordChannel villageVoice = await Game.guild.CreateChannelAsync("Village", ChannelType.Voice, chsCommun);
+                Game.DiscordChannels.Add("villageText", village);
+                Game.DiscordChannels.Add("villageVoice", villageVoice);
+
+
+                Console.WriteLine("RA : 5");
+                await (await e.Channel.GetMessageAsync(msgInv.Id)).ModifyAsync((await village.CreateInviteAsync()).ToString());
+
+
+                Console.WriteLine("RA : 6");
+
+                var chLoupText = await Game.guild.CreateChannelAsync("Loup", ChannelType.Text, chsCommun);
+                var chLoupVocal = await Game.guild.CreateChannelAsync("Loup", ChannelType.Voice, chsCommun);
+
+
+                foreach (var player in Game.PersonnagesList)
                 {
-                    DiscordChannel currentTextCh = await guild.CreateChannelAsync(player.Me.Username, ChannelType.Text, chsPerso);
-                    DiscordChannel currentVoiceCh = await guild.CreateChannelAsync(player.Me.Username, ChannelType.Voice, chsPerso);
+                    DiscordChannel currentTextCh =
+                        await Game.guild.CreateChannelAsync(player.Me.Username, ChannelType.Text, chsPerso);
+
+                    DiscordChannel currentVoiceCh =
+                        await Game.guild.CreateChannelAsync(player.Me.Username, ChannelType.Voice, chsPerso);
+
                     await currentVoiceCh.PlaceMemberAsync(player.Me as DiscordMember);
-                    foreach (var otherPlayer in Game.personnages.FindAll(x => x.Me != player.Me))
+
+                    foreach (var otherPlayer in Game.PersonnagesList.FindAll(x => x.Me != player.Me))
                     {
-                        await currentTextCh.AddOverwriteAsync(otherPlayer.Me as DiscordMember, Permissions.None, Permissions.AccessChannels);
-                        await currentVoiceCh.AddOverwriteAsync(otherPlayer.Me as DiscordMember, Permissions.None, Permissions.AccessChannels);
+                        await currentTextCh.AddOverwriteAsync(otherPlayer.Me as DiscordMember, Permissions.None,
+                            Permissions.AccessChannels);
+                        await currentVoiceCh.AddOverwriteAsync(otherPlayer.Me as DiscordMember, Permissions.None,
+                            Permissions.AccessChannels);
                     }
 
                     await currentTextCh.SendMessageAsync(player.ToString());
                 }
+
+
+                // On rend innacessible le channel au non loup
+                foreach (var player in Game.PersonnagesList)
+                {
+                    if (!(player.GetType() ==
+                          Type.GetType("WereWolfRebirth.Roles.Wolf") ||
+                          player.GetType().IsSubclassOf(Type.GetType("WereWolfRebirth.Roles.Wolf"))))
+                    {
+                        await chLoupText.AddOverwriteAsync(player.Me as DiscordMember, Permissions.None,
+                            Permissions.AccessChannels);
+                    }
+                }
             }
-            catch(SystemException ex)
+            catch (SystemException ex)
             {
                 System.Console.WriteLine(ex);
             }
-
         }
-
 
 
         [Command("stopInvite"), Aliases("stop", "sinv", "stopinv")]
@@ -190,8 +256,6 @@ namespace WereWolfRebirth
             Game.wait = false;
             await Task.CompletedTask;
         }
-
-
 
 
         [Command("disconnect"), Aliases("dis", "dc")]

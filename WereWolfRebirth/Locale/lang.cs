@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace WereWolfRebirth
+namespace WereWolfRebirth.Locale
 {
 
     public class Language
@@ -21,6 +21,9 @@ namespace WereWolfRebirth
         public string TownFriendly { get; set; }
         public string CharmedMessage { get; set; }
         public string MayorMessage { get; set; }
+
+        public string DailyVoteMessage { get; set; }
+        public string NightlyWolfMessage { get; set; }
     }
 
 }

@@ -1,6 +1,4 @@
-using System;
-
-namespace WereWolfRebirth.Enum 
+namespace WereWolfRebirth.Enum
 {
     public enum Role 
     {

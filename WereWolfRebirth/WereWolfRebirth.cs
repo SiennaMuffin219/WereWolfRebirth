@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
-using DSharpPlus;
-using DSharpPlus.Entities;
+﻿using DSharpPlus;
+using DSharpPlus.CommandsNext;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
-using DSharpPlus.Exceptions;
-using DSharpPlus.CommandsNext;
 using Newtonsoft.Json;
-using WereWolfRebirth.Roles;
-using WereWolfRebirth.Enum;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace WereWolfRebirth
 {
