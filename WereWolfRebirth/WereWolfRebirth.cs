@@ -21,7 +21,7 @@ namespace WereWolfRebirth
 
         public async Task AsyncMain()
         {
-            Config config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
+            Config config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("../../config.json"));
 
             client = new DiscordClient(new DiscordConfiguration()
             {

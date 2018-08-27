@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27703.2042
+VisualStudioVersion = 15.0.28010.2003
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WereWolfRebirth", "WereWolfRebirth\WereWolfRebirth.csproj", "{57F3EE73-E36E-4EB6-B67D-1147DF9F9425}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WerewolfRebirth", "WerewolfRebirth\WerewolfRebirth.csproj", "{1D9B4CE3-B488-41C1-9073-71D08D906C3E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{57F3EE73-E36E-4EB6-B67D-1147DF9F9425}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{57F3EE73-E36E-4EB6-B67D-1147DF9F9425}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{57F3EE73-E36E-4EB6-B67D-1147DF9F9425}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{57F3EE73-E36E-4EB6-B67D-1147DF9F9425}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D9B4CE3-B488-41C1-9073-71D08D906C3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D9B4CE3-B488-41C1-9073-71D08D906C3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D9B4CE3-B488-41C1-9073-71D08D906C3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D9B4CE3-B488-41C1-9073-71D08D906C3E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {A0B94503-7592-4A38-9AF5-B2500411F838}
+		SolutionGuid = {7CDE6AF5-8D33-4DE4-9F28-1161CBD80D62}
 	EndGlobalSection
 EndGlobal
