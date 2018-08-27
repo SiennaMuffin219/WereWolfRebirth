@@ -1,25 +1,26 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
+using System.Text;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using Newtonsoft.Json;
+using WereWolfRebirth.Roles;
 using WereWolfRebirth.Enum;
 using WereWolfRebirth.Locale;
-using WereWolfRebirth.Roles;
 
 namespace WereWolfRebirth.Env 
 {
     class Game
     {
         public static Dictionary<string, DiscordChannel> DiscordChannels;
-        public static Language TextJson = JsonConvert.DeserializeObject<Language>(File.ReadAllText($@"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}/Locale/Fr/lang.json", System.Text.Encoding.UTF8));
+        public static Language TextJson = JsonConvert.DeserializeObject<Language>(File.ReadAllText($@"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName}/Locale/Fr/lang.json", Encoding.UTF8));
         public static bool wait = true;
         public static List<Personnage> PersonnagesList;
         public static Victory Victory = Victory.None;
         public static DiscordClient Client = null;
         public static List<Vote> VoteList;
+        public static ulong GuildId;
 
 
 
@@ -87,7 +88,7 @@ namespace WereWolfRebirth.Env
             return p;
         }
 
-        public static void Play(Queue<Enum.Moments> moments)
+        public static void Play(Queue<Moments> moments)
         {
             while (moments.Count > 0)
             {

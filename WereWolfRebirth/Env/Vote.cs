@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography;
-
-namespace WereWolfRebirth.Env
+﻿namespace WereWolfRebirth.Env
 {
     public class Vote
     {

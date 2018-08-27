@@ -1,8 +1,11 @@
-﻿using DSharpPlus.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
+using System.Net;
 using System.Threading.Tasks;
+using DSharpPlus.Entities;
 using WereWolfRebirth.Enum;
 using WereWolfRebirth.Env;
 
@@ -28,25 +31,44 @@ namespace WereWolfRebirth.Roles
                 {
                     int nbRand = rand.Next(roles.Count);
                     DiscordGuildEmoji emoji = null;
-
-                    Stream img = null;
-
-                    if (players[0].AvatarUrl == players[0].DefaultAvatarUrl)
+                    try
                     {
-                        img = File.Open($"../..//Images//UserIcons//{letter}.png", FileMode.Open);
-                        letter = (char) (Convert.ToUInt32(letter) + 1);
+
+
+
+                        Image image = null;
+                        using (MemoryStream stream = new MemoryStream())
+                        {
+                            // Save image to stream.
+                            Console.WriteLine(players[0].Username + " : " + players[0].AvatarUrl);
+                                
+                            if (players[0].AvatarUrl == players[0].DefaultAvatarUrl)
+                            {
+                                image = Image.FromFile($"..//..//Images//UserIcons//{letter}.png");
+                                letter = (char) (Convert.ToUInt32(letter) + 1);
+                            }
+                            else
+                            {
+                                new WebClient().DownloadFile(players[0].AvatarUrl, $"..//..//Images//UserIcons//{players[0].Username}.png");
+								image = Image.FromFile($"..//..//Images//UserIcons//{players[0].Username}.png");
+
+                            }
+
+                            image.Save(stream, ImageFormat.Png);
+
+                            emoji = await Game.guild.CreateEmojiAsync(players[0].Username, stream);
+
+                        }
+
                     }
-                    else
+                    catch (Exception e)
                     {
-                        img = new System.Net.WebClient().OpenRead(players[0].AvatarUrl);
-                        emoji = await Game.guild.CreateEmojiAsync(players[0].Username, img);
-
+                        Console.WriteLine("Erreur Emoji");
+                        Console.WriteLine(e);
+                        emoji = DiscordEmoji.FromName(Game.Client, ":yum:") as DiscordGuildEmoji;
                     }
 
-
-
-
-
+                
                     switch (roles[nbRand])
                     {
                         case Role.Citizien:
@@ -85,17 +107,17 @@ namespace WereWolfRebirth.Roles
 
                 }
             }
-            catch (System.Exception ex1)
+            catch (Exception ex1)
             {
 
-                System.Console.WriteLine(ex1);
+                Console.WriteLine(ex1);
             }
 
 
         }
 
 
-        static public List<Role> CreateRoles(int NbPlayer)
+        public static List<Role> CreateRoles(int NbPlayer)
         {
             List<Role> RoleList = new List<Role>();
 
@@ -132,7 +154,7 @@ namespace WereWolfRebirth.Roles
             return RoleList;
         }
 
-        static public void Debug()
+        public static void Debug()
         {
             if (Game.PersonnagesList is null)
             {
@@ -144,7 +166,7 @@ namespace WereWolfRebirth.Roles
                 int i = 0;
                 foreach (Personnage p in Game.PersonnagesList)
                 {
-                    Console.WriteLine(i + " : " + p.ToString());
+                    Console.WriteLine(i + " : " + p);
                     i++;
                 }
 
@@ -318,7 +340,7 @@ namespace WereWolfRebirth.Roles
         public bool Alive {get; set;}
         public Effect bonus = Effect.None;
 
-        public DiscordGuildEmoji Emoji = null;
+        public DiscordGuildEmoji Emoji;
 
         public Personnage(DiscordUser me, DiscordGuildEmoji emoji)
         {

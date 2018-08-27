@@ -20,7 +20,7 @@ namespace WereWolfRebirth.Enum
     {
         None = 0,
         Lover = 1, 
-        Mayor = 2,
+        Mayor = 2
         // Charmed = 4
         
     }
@@ -30,7 +30,7 @@ namespace WereWolfRebirth.Enum
         None,   // Pas encore terminé
         Wolf,   // Les loups
         Town,   // Le Village
-        Lovers, // Les Amoureux
+        Lovers // Les Amoureux
 
         //  PiedPiper, // Joueur de flute
 

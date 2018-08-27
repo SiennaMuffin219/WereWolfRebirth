@@ -1,18 +1,20 @@
-﻿using DSharpPlus;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
 using Newtonsoft.Json;
-using System;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace WereWolfRebirth
 {
     class Program
     {
         private DiscordClient client;
-        private CommandsNextModule commands;
+        
+        private CommandsNextExtension commands;
 
 
 
@@ -23,17 +25,19 @@ namespace WereWolfRebirth
         {
             Config config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("../../config.json"));
 
-            client = new DiscordClient(new DiscordConfiguration()
+            client = new DiscordClient(new DiscordConfiguration
             {
                 LogLevel = LogLevel.Debug,
-                Token = config.token,
+                Token = config.token
             });
-
-            commands = client.UseCommandsNext(new CommandsNextConfiguration()
+			
+            commands = client.UseCommandsNext(new CommandsNextConfiguration
             {
                 CaseSensitive = false,
-                StringPrefix = config.prefix
+                StringPrefixes = new List<string> { config.prefix }
             });
+
+
             commands.RegisterCommands<BotCommands>();
             client.UseInteractivity(new InteractivityConfiguration());
 
@@ -122,7 +126,7 @@ namespace WereWolfRebirth
             }
             catch (Exception) 
             {
-                System.Console.WriteLine();
+                Console.WriteLine();
             }
             return Task.CompletedTask;
         }
@@ -136,8 +140,7 @@ namespace WereWolfRebirth
             e.Client.DebugLogger.LogMessage(LogLevel.Info, "BotApp", $"{e.UserAfter.Username} just updated", DateTime.Now);
             e.Client.DebugLogger.LogMessage(LogLevel.Debug, "BotApp", $"{e.UserBefore.Username}#{e.UserBefore.Discriminator} => {e.UserAfter.Username}#{e.UserAfter.Discriminator}", DateTime.Now);
             e.Client.DebugLogger.LogMessage(LogLevel.Debug, "BotApp", $"{e.UserBefore.AvatarUrl} => {e.UserAfter.AvatarUrl}", DateTime.Now);
-            e.Client.DebugLogger.LogMessage(LogLevel.Debug, "BotApp", $"{e.UserBefore.Presence.Game.Name} => {e.UserAfter.Presence.Game.Name}", DateTime.Now);
-            e.Client.DebugLogger.LogMessage(LogLevel.Debug, "BotApp", $"{e.UserBefore.Presence.Game.Name} => {e.UserAfter.Presence.Game.Name}", DateTime.Now);
+            e.Client.DebugLogger.LogMessage(LogLevel.Debug, "BotApp", $"{e.UserBefore.Presence.Activity.Name} => {e.UserAfter.Presence.Activity.Name}", DateTime.Now);
             return Task.CompletedTask;
         }
         private Task Client_UserSettingsUpdated(UserSettingsUpdateEventArgs e)
@@ -237,7 +240,7 @@ namespace WereWolfRebirth
         }
         private Task Client_GuildUnavailable(GuildDeleteEventArgs e)
         {
-            e.Client.DebugLogger.LogMessage(LogLevel.Info, "BotApp", e.ToString(), DateTime.Now);
+            e.Client.DebugLogger.LogMessage(LogLevel.Info, "BotApp", $"{e.Guild.Name} deleted", DateTime.Now);
             return Task.CompletedTask;
         }
         private Task Client_GuildRoleUpdated(GuildRoleUpdateEventArgs e)
@@ -247,12 +250,12 @@ namespace WereWolfRebirth
         }
         private Task Client_GuildRoleDeleted(GuildRoleDeleteEventArgs e)
         {
-            e.Client.DebugLogger.LogMessage(LogLevel.Info, "BotApp", e.ToString(), DateTime.Now);
+            e.Client.DebugLogger.LogMessage(LogLevel.Info, "BotApp", $"{e.Role.Name} deleted on {e.Guild.Name})", DateTime.Now);
             return Task.CompletedTask;
         }
         private Task Client_GuildRoleCreated(GuildRoleCreateEventArgs e)
         {
-            e.Client.DebugLogger.LogMessage(LogLevel.Info, "BotApp", e.ToString(), DateTime.Now);
+            e.Client.DebugLogger.LogMessage(LogLevel.Info, "BotApp", $"{e.Role.Name} created on {e.Guild.Name})", DateTime.Now);
             return Task.CompletedTask;
         }
         private Task Client_GuildMemberUpdated(GuildMemberUpdateEventArgs e)
@@ -267,12 +270,12 @@ namespace WereWolfRebirth
         }
         private Task Client_GuildMemberRemoved(GuildMemberRemoveEventArgs e)
         {
-            e.Client.DebugLogger.LogMessage(LogLevel.Info, "BotApp", e.ToString(), DateTime.Now);
+            e.Client.DebugLogger.LogMessage(LogLevel.Info, "BotApp", $"{e.Member.Username} left {e.Guild.Name})", DateTime.Now);
             return Task.CompletedTask;
         }
         private Task Client_GuildMemberAdded(GuildMemberAddEventArgs e)
         {
-            e.Client.DebugLogger.LogMessage(LogLevel.Info, "BotApp", e.ToString(), DateTime.Now);
+            e.Client.DebugLogger.LogMessage(LogLevel.Info, "BotApp", $"{e.Member.Username} added on {e.Guild.Name})", DateTime.Now);
             return Task.CompletedTask;
         }
         private Task Client_GuildIntegrationsUpdated(GuildIntegrationsUpdateEventArgs e)
@@ -287,12 +290,12 @@ namespace WereWolfRebirth
         }
         private Task Client_GuildDeleted(GuildDeleteEventArgs e)
         {
-            e.Client.DebugLogger.LogMessage(LogLevel.Info, "BotApp", e.ToString(), DateTime.Now);
+            e.Client.DebugLogger.LogMessage(LogLevel.Info, "BotApp", $"{e.Guild.Name} deleted", DateTime.Now);
             return Task.CompletedTask;
         }
         private Task Client_GuildCreated(GuildCreateEventArgs e)
         {
-            e.Client.DebugLogger.LogMessage(LogLevel.Info, "BotApp", e.ToString(), DateTime.Now);
+            e.Client.DebugLogger.LogMessage(LogLevel.Info, "BotApp", $"{e.Guild.Name} created", DateTime.Now);
             return Task.CompletedTask;
         }
         private Task Client_GuildBanRemoved(GuildBanRemoveEventArgs e)
@@ -317,26 +320,35 @@ namespace WereWolfRebirth
         }
         private Task Client_ClientErrored(ClientErrorEventArgs e)
         {
-            e.Client.DebugLogger.LogMessage(LogLevel.Info, "BotApp", e.ToString(), DateTime.Now);
+            e.Client.DebugLogger.LogMessage(LogLevel.Error, "BotApp", $"Client error: {e.EventName}  -  {e.Exception}", DateTime.Now);
             return Task.CompletedTask;
         }
         private Task Client_ChannelUpdated(ChannelUpdateEventArgs e)
         {
-            e.Client.DebugLogger.LogMessage(LogLevel.Info, "BotApp", e.ToString(), DateTime.Now);
+            e.Client.DebugLogger.LogMessage(LogLevel.Info, "BotApp", $"{e.ChannelBefore.Name} just updated", DateTime.Now);
+			if (e.ChannelBefore.IsNSFW != e.ChannelAfter.IsNSFW)
+                e.Client.DebugLogger.LogMessage(LogLevel.Debug, "BotApp", $"{e.ChannelBefore.Name} is {(e.ChannelAfter.IsNSFW ? "now" : "no longer")} NSFW", DateTime.Now);
+            if (e.ChannelBefore.IsPrivate != e.ChannelAfter.IsPrivate)
+                e.Client.DebugLogger.LogMessage(LogLevel.Debug, "BotApp", $"{e.ChannelBefore.Name} is {(e.ChannelAfter.IsPrivate ? "now" : "no longer")} private", DateTime.Now);
+            if (e.ChannelBefore.Name != e.ChannelAfter.Name)
+                e.Client.DebugLogger.LogMessage(LogLevel.Debug, "BotApp", $"{e.ChannelBefore.Name} is now named {e.ChannelAfter.Name}", DateTime.Now);
+            if (e.ChannelBefore.Topic != e.ChannelAfter.Topic)
+                e.Client.DebugLogger.LogMessage(LogLevel.Debug, "BotApp", $"{e.ChannelBefore.Name}'s topic is now {e.ChannelAfter.Topic}", DateTime.Now);
+
             return Task.CompletedTask;
         }
         private Task Client_ChannelPinsUpdated(ChannelPinsUpdateEventArgs e)
         {
-            e.Client.DebugLogger.LogMessage(LogLevel.Info, "BotApp", e.ToString(), DateTime.Now);
+            e.Client.DebugLogger.LogMessage(LogLevel.Info, "BotApp", $"New pin on {e.Channel.Name} ({e.Channel.Guild.Name})", DateTime.Now);
             return Task.CompletedTask;
         }
         private Task Client_ChannelDeleted(ChannelDeleteEventArgs e)
         {
-            e.Client.DebugLogger.LogMessage(LogLevel.Info, "BotApp", e.ToString(), DateTime.Now);
+            e.Client.DebugLogger.LogMessage(LogLevel.Info, "BotApp", $"{e.Channel.Name} deleted on {e.Guild.Name}", DateTime.Now);
             return Task.CompletedTask;
         }
 
-        private static void DebugLogger_LogMessageReceived(object sender, DSharpPlus.EventArgs.DebugLogMessageEventArgs e)
+        private static void DebugLogger_LogMessageReceived(object sender, DebugLogMessageEventArgs e)
         {
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.DarkRed;
