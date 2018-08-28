@@ -10,20 +10,19 @@ using Newtonsoft.Json;
 
 namespace WereWolfRebirth
 {
-    class Program
+    internal class Program
     {
         private DiscordClient client;
         
         private CommandsNextExtension commands;
 
 
-
-        static void Main(string[] args) => new Program().AsyncMain().GetAwaiter().GetResult();
+        private static void Main(string[] args) => new Program().AsyncMain().GetAwaiter().GetResult();
 
 
         public async Task AsyncMain()
         {
-            Config config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("../../config.json"));
+            var config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("../../config.json"));
 
             client = new DiscordClient(new DiscordConfiguration
             {
@@ -379,8 +378,6 @@ namespace WereWolfRebirth
                 case LogLevel.Debug:
                     Console.ForegroundColor = ConsoleColor.Green;
                     break;
-                default:
-                    break;
             }
             Console.WriteLine(e.Message);
 
@@ -391,8 +388,7 @@ namespace WereWolfRebirth
         #endregion
 
 
-
-    struct Config
+    internal struct Config
     {
         [JsonProperty("token")]
         public string token { get; private set; }

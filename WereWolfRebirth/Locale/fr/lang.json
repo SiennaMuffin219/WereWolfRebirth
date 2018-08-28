@@ -1,5 +1,12 @@
 {
   "Lang": "fr",
+
+  "GraveyardChannel": "Cimetière",
+  "TownChannel": "Village",
+  "WolvesChannel": "Loups",
+  "PersoGroup": "Salons Personnels",
+  "SharedGroup": "Salons Communs",
+
   "CitizienToString": "Votre role est... ben... d'être un __*villageois*__... Et de le rester le plus longtemps possible.\nPour cela vous devez éliminer les loups garous qui pourraient décider de **vous** éliminer et le seul moyen de le faire est de voter à la fin de la journée contre celui qui vous semble le plus suspect.\nEt aussi de réussir à ce que les autres villageois ne votent pas votre mort.\nAvouez que ça serait dommage.",
   "WolfToString": "Vous êtes un __*loup-garou*__. Votre but est d'exterminer, de dévorer, d'étriper, de décimer tous les villageois et leurs alliés.",
   "HunterToString": "Vous Chasseur de profession étant un as de la gachette, **lors de votre mort** (de n'importe qu'elle façon que ce soit) vous pouvez tuer la personne de votre choix dans l'assistance.",
@@ -12,7 +19,8 @@
   "TownFriendly": "Vous êtes avec les autres villageois. Votre but est d'éliminer les loups.",
   "CharmedMessage": "Si votre amoureux meurt, vous le suivez dans sa mort.",
   "MayorMessage": "Vous êtes le maire, en cas d'égalité pendant le vote diurne, votre voix compte double.",
-  "DailyVoteMessage":"Qui est le plus coupable d'entre vous ?",
-  "NightlyWolfMessage": "Qui est désigner pour être manger ?"
+
+  "DailyVoteMessage": "Qui est le plus coupable d'entre vous ?",
+  "NightlyWolfMessage": "Qui est désigné pour être manger ?"
 
 }

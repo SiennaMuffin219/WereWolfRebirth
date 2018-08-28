@@ -49,5 +49,16 @@ namespace WereWolfRebirth.Enum
 
     }
 
-
+    public enum GameChannel
+    {
+		PersoGroup,
+		SharedGroup,
+		TownText,
+		TownVoice,
+		WolfText,
+		WolfVoice,
+		GraveyardText,
+		GraveyardVoice,
+		BotText
+    }
 }
