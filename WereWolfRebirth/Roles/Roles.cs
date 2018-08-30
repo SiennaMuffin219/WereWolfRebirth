@@ -1,264 +1,96 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Net;
-using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using WereWolfRebirth.Enum;
 using WereWolfRebirth.Env;
-using ImageFormat = System.Drawing.Imaging.ImageFormat;
+using WereWolfRebirth.Env.Extentions;
+using WereWolfRebirth.Locale;
 
 namespace WereWolfRebirth.Roles
 {
-    public static class GameBuilder
+
+
+    #region GameRole's Classes
+
+    public class Wolf : Personnage
     {
-        public static Permissions UsrPerms = Game.CreatePerms(Permissions.AccessChannels, Permissions.AddReactions, Permissions.SendMessages);
-
-        public static async Task CreatePersonnages(List<DiscordUser> players)
+        public Wolf(DiscordMember me, DiscordGuildEmoji emoji) : base(me, emoji)
         {
-            try
-            {
-
-                var roles = CreateRoles(players.Count);
-                var rand = new Random(DateTime.Now.Millisecond);
-
-
-                Game.PersonnagesList = new List<Personnage>();
-
-                var letter = 'a';
-
-                while (players.Count != 0)
-                {
-                    var nbRand = rand.Next(roles.Count);
-                    DiscordGuildEmoji emoji;
-                    try
-                    {
-
-
-
-                        Image image;
-                        using (var stream = new MemoryStream())
-                        {
-                            // Save image to stream.
-
-                             
-
-                            Console.WriteLine(players[0].Username + " : " + players[0].AvatarUrl);
-
-                            if (players[0].AvatarUrl == players[0].DefaultAvatarUrl)
-                            {
-                                image = Image.FromFile($"..//..//Images//UserIcons//{letter}.png");
-                                letter = (char) (Convert.ToUInt32(letter) + 1);
-                            }
-                            else
-                            {
-                              
-                                new WebClient().DownloadFile(players[0].AvatarUrl.Replace("size=1024", "size=256"),
-                                    $"..//..//Images//UserIcons//{WebUtility.HtmlEncode(players[0].Username)}.png");
-                                image = Image.FromFile($"..//..//Images//UserIcons//{WebUtility.HtmlEncode(players[0].Username)}.png");
-                            }
-
-                            image.Save(stream, ImageFormat.Png);
-
-                            emoji = await Game.guild.CreateEmojiAsync(WebUtility.HtmlEncode(players[0].Username), stream);
-
-                        }
-
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine("Erreur Emoji");
-                        Console.WriteLine(e);
-                        emoji = DiscordEmoji.FromName(Game.Client, ":yum:") as DiscordGuildEmoji;
-                    }
-
-
-                    switch (roles[nbRand])
-                    {
-                        case Role.Citizien:
-                            Game.PersonnagesList.Add(new Citizien(players[0], emoji));
-                            break;
-                        case Role.Hunter:
-                            Game.PersonnagesList.Add(new Hunter(players[0], emoji));
-                            break;
-                        case Role.Cupid:
-                            Game.PersonnagesList.Add(new Cupidon(players[0], emoji));
-                            break;
-                        case Role.Witch:
-                            Game.PersonnagesList.Add(new Witch(players[0], emoji));
-                            break;
-                        case Role.Savior:
-                            Game.PersonnagesList.Add(new Salvator(players[0], emoji));
-                            break;
-                        case Role.Seer:
-                            Game.PersonnagesList.Add(new Seer(players[0], emoji));
-                            break;
-                        case Role.TalkativeSeer:
-                            Game.PersonnagesList.Add(new TalkativeSeer(players[0], emoji));
-                            break;
-                        case Role.LittleGirl:
-                            Game.PersonnagesList.Add(new LittleGirl(players[0], emoji));
-                            break;
-
-                        case Role.Wolf:
-                            Game.PersonnagesList.Add(new Wolf(players[0], emoji));
-                            break;
-
-                    }
-
-                    roles.RemoveAt(nbRand);
-                    players.RemoveAt(0);
-
-                }
-            }
-            catch (Exception ex1)
-            {
-
-                Console.WriteLine(ex1);
-            }
-
-
+            Game.DiscordChannels[GameChannel.WolfText].AddOverwriteAsync(me, GameBuilder.UsrPerms);
+            Game.DiscordChannels[GameChannel.WolfVoice].AddOverwriteAsync(me, GameBuilder.UsrPerms);
         }
-
-
-        public static List<Role> CreateRoles(int nbPlayer)
-        {
-            var roleList = new List<Role>();
-
-            for (var i = 0; i < nbPlayer; i++)
-            {
-                switch (i)
-                {
-                    case 1:
-                        roleList.Add(Role.Citizien);
-                        break;
-                    case 2:
-                        roleList.Add(Role.Wolf);
-                        break;
-                    case 3:
-                        roleList.Add(Role.Seer);
-                        break;
-                    case 4:
-                        roleList.Add(Role.Wolf);
-                        break;
-                    case 5:
-                        roleList.Add(Role.Savior);
-                        roleList.Add(Role.Citizien);
-                        roleList.Add(Role.Wolf);
-                        break;
-                    case 6:
-                        roleList.Add(Role.LittleGirl);
-                        break;
-                    case 7:
-                        roleList.Add(Role.Witch);
-                        break;
-                    case 8:
-                        roleList.Add(Role.Hunter);
-                        break;
-                    case 9:
-                        roleList.Add(Role.Wolf);
-                        break;
-                    case 10:
-                        roleList.Add(Role.Cupid);
-                        break;
-                    default:
-                        roleList.Add(i % 3 == 0 ? Role.Wolf : Role.Citizien);
-                        break;
-                }
-            }
-
-            return roleList;
-        }
-
-        public static void Debug()
-        {
-            if (Game.PersonnagesList is null)
-            {
-                Console.WriteLine("Il n'y a aucun personnage joueur dans le jeu");
-            }
-            else
-            {
-
-                var i = 0;
-                foreach (var p in Game.PersonnagesList)
-                {
-                    Console.WriteLine(i + " : " + p);
-                    i++;
-                }
-
-            }
-        }
-
-
-    }
-
-    #region Role's Classes
-
-        public class Wolf : Personnage
-        {
-            public Wolf(DiscordUser me, DiscordGuildEmoji emoji) : base(me, emoji)
-            {
-                Game.DiscordChannels[GameChannel.WolfText].AddOverwriteAsync(me as DiscordMember, GameBuilder.UsrPerms);
-                Game.DiscordChannels[GameChannel.WolfVoice].AddOverwriteAsync(me as DiscordMember, GameBuilder.UsrPerms);
-            }
 
 
         public void DoRole()
-            {
-                throw new NotImplementedException();
-            }
+        {
+            throw new NotImplementedException();
+        }
 
 
-            public static bool HasWon()
-            {
-                return !Game.PersonnagesList.Exists(x =>
-                    x.GetType() == Type.GetType("WereWolfRebirth.Roles.Citizien") ||
-                    x.GetType() == Type.GetType("WereWolfRebirth.Roles.PiedPiper") ||
-                    x.GetType().IsSubclassOf(Type.GetType("WereWolfRebirth.Roles.Citizien") ?? throw new InvalidOperationException()));
+        public static bool HasWon()
+        {
+            return !Game.PersonnagesList.Exists(x =>
+                x.GetType() == Type.GetType("WereWolfRebirth.Roles.Citizen") ||
+                x.GetType() == Type.GetType("WereWolfRebirth.Roles.PiedPiper") ||
+                x.GetType().IsSubclassOf(Type.GetType("WereWolfRebirth.Roles.Citizen") ??
+                                         throw new InvalidOperationException()));
+        }
 
-            }
 
+        public override string ToString()
+        {
+            return Game.Texts.WolfToString;
+        }
 
-            public override string ToString()
-            {
-                return Game.TextJson.WolfToString;
-            }
+        public override string GotKilled()
+        {
+            return base.GotKilled() + $"{Game.Texts.WolfName}";
+        }
 
+        public override string GetClassName()
+        {
+            return Game.Texts.WolfName;
+        }
     }
 
 
-    public class Citizien : Personnage
+    public class Citizen : Personnage
     {
-
-
-        public Citizien(DiscordUser me, DiscordGuildEmoji emoji) : base(me, emoji)
-        { }
+        public Citizen(DiscordMember me, DiscordGuildEmoji emoji) : base(me, emoji)
+        {
+        }
 
         public void DoRole()
         {
-
         }
 
         public static bool HasWon()
         {
             return !Game.PersonnagesList.Exists(x =>
                 x.GetType() == Type.GetType("WereWolfRebirth.Roles.Wolf") ||
-                x.GetType().IsSubclassOf(Type.GetType("WereWolfRebirth.Roles.Wolf") ?? throw new InvalidOperationException()));
+                x.GetType().IsSubclassOf(Type.GetType("WereWolfRebirth.Roles.Wolf") ??
+                                         throw new InvalidOperationException()));
         }
 
         public override string ToString()
         {
-            return Game.TextJson.CitizienToString;
+            return Game.Texts.CitizenToString;
         }
 
+        public override string GotKilled()
+        {
+            return base.GotKilled() + $"{Game.Texts.CitizenName}";
+        }
+        public override string GetClassName()
+        {
+            return Game.Texts.CitizenName;
+        }
     }
 
 
-    public class Salvator : Citizien
+    public class Salvator : Citizen
     {
-        public Salvator(DiscordUser me, DiscordGuildEmoji emoji) : base(me, emoji)
+        public Salvator(DiscordMember me, DiscordGuildEmoji emoji) : base(me, emoji)
         {
         }
 
@@ -267,129 +99,202 @@ namespace WereWolfRebirth.Roles
             throw new NotImplementedException();
         }
 
-        public new static bool HasWon() => Citizien.HasWon();
+        public new static bool HasWon() => Citizen.HasWon();
 
         public override string ToString()
         {
-            return Game.TextJson.SaviorToString + " \n " + Game.TextJson.TownFriendly;
+            return Game.Texts.SaviorToString + " \n " + Game.Texts.TownFriendly;
         }
-
-
-
-    }
-
-
-    public class Witch : Citizien
-    {
-        public Witch(DiscordUser me, DiscordGuildEmoji emoji) : base(me, emoji)
-        { }
-        public new static bool HasWon() => Citizien.HasWon();
-
-        public override string ToString()
+        public override string GotKilled()
         {
-            return Game.TextJson.WitchToString + " \n " + Game.TextJson.TownFriendly;
+            return base.GotKilled() + $"{Game.Texts.SaviorName}";
+        }
+        public override string GetClassName()
+        {
+            return Game.Texts.SaviorName;
         }
     }
 
-    public class LittleGirl : Citizien
+
+    public class Witch : Citizen
     {
-        public LittleGirl(DiscordUser me, DiscordGuildEmoji emoji) : base(me, emoji)
-        { }
-        public new static bool HasWon() => Citizien.HasWon();
+        public Witch(DiscordMember me, DiscordGuildEmoji emoji) : base(me, emoji)
+        {
+        }
+
+        public new static bool HasWon() => Citizen.HasWon();
 
         public override string ToString()
         {
-            return Game.TextJson.LittleGirlToString + " \n " + Game.TextJson.TownFriendly;
+            return Game.Texts.WitchToString + " \n " + Game.Texts.TownFriendly;
+        }
+        public override string GotKilled()
+        {
+            return base.GotKilled() + $"{Game.Texts.WitchName}";
+        }
+        public override string GetClassName()
+        {
+            return Game.Texts.WitchName;
         }
     }
 
-    public class Hunter : Citizien
+    public class LittleGirl : Citizen
     {
-        public Hunter(DiscordUser me, DiscordGuildEmoji emoji) : base(me, emoji)
-        { }
-        public new static bool HasWon() => Citizien.HasWon();
+        public LittleGirl(DiscordMember me, DiscordGuildEmoji emoji) : base(me, emoji)
+        {
+        }
+
+        public new static bool HasWon() => Citizen.HasWon();
 
         public override string ToString()
         {
-            return Game.TextJson.HunterToString + " \n " + Game.TextJson.TownFriendly;
+            return Game.Texts.LittleGirlToString + " \n " + Game.Texts.TownFriendly;
+        }
+        public override string GotKilled()
+        {
+            return base.GotKilled() + $"{Game.Texts.LittleGirlName}";
+        }
+        public override string GetClassName()
+        {
+            return Game.Texts.LittleGirlName;
         }
     }
 
-    public class Cupidon : Citizien
+    public class Hunter : Citizen
     {
-        public Cupidon(DiscordUser me, DiscordGuildEmoji emoji) : base(me, emoji)
-        { }
-        public new static bool HasWon() => Citizien.HasWon();
+        public Hunter(DiscordMember me, DiscordGuildEmoji emoji) : base(me, emoji)
+        {
+        }
+
+        public new static bool HasWon() => Citizen.HasWon();
 
         public override string ToString()
         {
-            return Game.TextJson.CupidToString + " \n " + Game.TextJson.TownFriendly;
+            return Game.Texts.HunterToString + " \n " + Game.Texts.TownFriendly;
+        }
+        public override string GotKilled()
+        {
+            return base.GotKilled() + $"{Game.Texts.HunterName}";
+        }
+        public override string GetClassName()
+        {
+            return Game.Texts.HunterName;
         }
     }
 
-    public class Seer : Citizien
+    public class Cupidon : Citizen
     {
-        public Seer(DiscordUser me, DiscordGuildEmoji emoji) : base(me, emoji)
-        { }
-        public new static bool HasWon() => Citizien.HasWon();
+        public Cupidon(DiscordMember me, DiscordGuildEmoji emoji) : base(me, emoji)
+        {
+        }
+
+        public new static bool HasWon() => Citizen.HasWon();
 
         public override string ToString()
         {
-            return Game.TextJson.SeerToString + " \n " + Game.TextJson.TownFriendly;
+            return Game.Texts.CupidToString + " \n " + Game.Texts.TownFriendly;
+        }
+        public override string GotKilled()
+        {
+            return Language.FirstDieMessages(Me) + Game.Texts.CupidName;
+        }
+        public override string GetClassName()
+        {
+            return Game.Texts.CupidName;
+        }
+    }
+
+    public class Seer : Citizen
+    {
+        public Seer(DiscordMember me, DiscordGuildEmoji emoji) : base(me, emoji)
+        {
+        }
+
+        public new static bool HasWon() => Citizen.HasWon();
+
+        public override string ToString()
+        {
+            return Game.Texts.SeerToString + " \n " + Game.Texts.TownFriendly;
+        }
+
+        public override string GotKilled()
+        {
+            return base.GotKilled() + $"{Game.Texts.SeerName}";
+        }
+        public override string GetClassName()
+        {
+            return Game.Texts.SeerName;
         }
     }
 
     public class TalkativeSeer : Seer
     {
-        public TalkativeSeer(DiscordUser me, DiscordGuildEmoji emoji) : base(me, emoji)
-        { }
+        public TalkativeSeer(DiscordMember me, DiscordGuildEmoji emoji) : base(me, emoji)
+        {
+        }
+
         public new static bool HasWon() => Seer.HasWon();
 
         public override string ToString()
         {
-            return Game.TextJson.SeerToString + " \n " + Game.TextJson.TalkativeSeerToString + " \n " + Game.TextJson.TownFriendly;
+            return Game.Texts.SeerToString + " \n " + Game.Texts.TalkativeSeerToString + " \n " +
+                   Game.Texts.TownFriendly;
+        }
+
+        public override string GotKilled()
+        {
+            return base.GotKilled() + $"{Game.Texts.TalkativeSeerName}";
+        }
+        public override string GetClassName()
+        {
+            return Game.Texts.TalkativeSeerName;
         }
     }
 
     #endregion
 
-    public class Personnage
+    public abstract class Personnage
     {
-
-        public DiscordUser Me { get; private set; }
-        public bool Alive {get; set;}
-        public Effect Bonus = Effect.None;
+        public DiscordMember Me { get; private set; }
+        public bool Alive { get; set; }
+        public Effect Effect = Effect.None;
 
         public DiscordChannel ChannelT { get; set; }
         public DiscordChannel ChannelV { get; set; }
 
         public DiscordGuildEmoji Emoji;
 
-        public Personnage(DiscordUser me, DiscordGuildEmoji emoji)
+        public Personnage(DiscordMember me, DiscordGuildEmoji emoji)
         {
             Me = me;
             Emoji = emoji;
             Alive = true;
 
-            ChannelV = Game.guild.CreateChannelAsync(Me.Username, ChannelType.Voice, Game.DiscordChannels[GameChannel.PersoGroup]).GetAwaiter().GetResult();
-            ChannelT = Game.guild.CreateChannelAsync(Me.Username, ChannelType.Text, Game.DiscordChannels[GameChannel.PersoGroup]).GetAwaiter().GetResult();
+            string name = Me.Username.RemoveSpecialChars() ?? "jesaispasquoi";
+
+
+            ChannelV = Game.Guild.CreateChannelAsync(Me.Username.RemoveSpecialChars(), ChannelType.Voice,
+                Game.DiscordChannels[GameChannel.PersoGroup]).GetAwaiter().GetResult();
+            ChannelT = Game.Guild.CreateChannelAsync(Me.Username.RemoveSpecialChars(), ChannelType.Text,
+                Game.DiscordChannels[GameChannel.PersoGroup]).GetAwaiter().GetResult();
 
             // ReSharper disable once VirtualMemberCallInConstructor
+
+
+            ChannelT.AddOverwriteAsync(Me, GameBuilder.UsrPerms);
+            ChannelV.AddOverwriteAsync(Me, GameBuilder.UsrPerms);
+
+            Game.DiscordChannels[GameChannel.TownText].AddOverwriteAsync(Me, GameBuilder.UsrPerms);
+            Game.DiscordChannels[GameChannel.TownVoice].AddOverwriteAsync(Me, GameBuilder.UsrPerms);
+
             ChannelT.SendMessageAsync(ToString()).GetAwaiter().GetResult();
-
-
-            ChannelT.AddOverwriteAsync(me as DiscordMember, GameBuilder.UsrPerms);
-            ChannelV.AddOverwriteAsync(me as DiscordMember, GameBuilder.UsrPerms);
-
-            Game.DiscordChannels[GameChannel.TownText].AddOverwriteAsync(me as DiscordMember, GameBuilder.UsrPerms);
-            Game.DiscordChannels[GameChannel.TownVoice].AddOverwriteAsync(me as DiscordMember, GameBuilder.UsrPerms);
-
         }
 
+        public virtual string GotKilled()
+        {
+            return Me.DisplayName + Game.Texts.DeadMessagePublic;
+        }
 
-
+        public abstract string GetClassName();
     }
-
-
-
 }

@@ -1,8 +1,8 @@
 namespace WereWolfRebirth.Enum
 {
-    public enum Role 
+    public enum GameRole 
     {
-        Citizien,       // Villageois
+        Citizen,       // Villageois
         Seer,           // Voyante
         TalkativeSeer,  // Voyante bavarde
         LittleGirl,     // Petite Fille
@@ -30,20 +30,19 @@ namespace WereWolfRebirth.Enum
         None,   // Pas encore terminé
         Wolf,   // Les loups
         Town,   // Le Village
-        Lovers // Les Amoureux
+        Lovers	// Les Amoureux
 
         //  PiedPiper, // Joueur de flute
 
     }
 
-    public enum Moments
+    public enum Moment
     {
         Voting,         // Vote du jour 
         HunterDead,     // Vengeance du Chasseur
         Seer,           // Action de la voyante
         Witch,          // Action de la Witch
-        Wolfs,          // Wolfs  & Petite fille 
-        End,            // Fin de la partie
+        Wolfs,          // Wolfs & Petite fille 
         Election,       // Election du maire 
         Cupid           // Cupidon tour 1
 
@@ -58,7 +57,13 @@ namespace WereWolfRebirth.Enum
 		WolfText,
 		WolfVoice,
 		GraveyardText,
-		GraveyardVoice,
 		BotText
+    }
+
+    public enum CustomRoles
+    {
+        Spectator,
+        Player,
+        Admin
     }
 }

@@ -12,6 +12,23 @@
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>P:\PERSO\Publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <AutorunEnabled>true</AutorunEnabled>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,6 +50,18 @@
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>2669848BB4B2A8AF5CD9E49A3801E40421D56D7C</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>WereWolfRebirth_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="DSharpPlus, Version=4.0.0.513, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\DSharpPlus.4.0.0-beta-00513\lib\net47\DSharpPlus.dll</HintPath>
@@ -40,8 +69,8 @@
     <Reference Include="DSharpPlus.CommandsNext, Version=4.0.0.513, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\DSharpPlus.CommandsNext.4.0.0-beta-00513\lib\net47\DSharpPlus.CommandsNext.dll</HintPath>
     </Reference>
-    <Reference Include="DSharpPlus.Interactivity, Version=4.0.0.513, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DSharpPlus.Interactivity.4.0.0-beta-00513\lib\net47\DSharpPlus.Interactivity.dll</HintPath>
+    <Reference Include="DSharpPlus.Lavalink, Version=4.0.0.513, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DSharpPlus.Lavalink.4.0.0-beta-00513\lib\net47\DSharpPlus.Lavalink.dll</HintPath>
     </Reference>
     <Reference Include="DSharpPlus.VoiceNext, Version=4.0.0.513, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\DSharpPlus.VoiceNext.4.0.0-beta-00513\lib\net47\DSharpPlus.VoiceNext.dll</HintPath>
@@ -150,7 +179,7 @@
     <Compile Include="BotFunctions.cs" />
     <Compile Include="Enum\Enum.cs" />
     <Compile Include="Env\Environment.cs" />
-    <Compile Include="Env\Vote.cs" />
+    <Compile Include="Env\Extentions\Extensions.cs" />
     <Compile Include="Locale\lang.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Roles\Roles.cs" />
@@ -173,10 +202,28 @@
     <None Include="Locale\en\lang.json" />
     <None Include="Locale\fr\lang.json" />
     <None Include="packages.config" />
+    <None Include="WereWolfRebirth_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Locale\de\" />
     <Folder Include="Locale\es\" />
   </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.1">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.1 %28x86 et x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties Locale_4fr_4lang_1json__JSONSchema="http://json.schemastore.org/appsettings" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>

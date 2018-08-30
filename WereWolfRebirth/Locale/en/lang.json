@@ -1,15 +1,20 @@
 {
   "Lang": "en",
 
+  "BotName": "Moderator",
+
   "GraveyardChannel": "Graveyard",
   "TownChannel": "Town",
   "WolvesChannel": "Wolves",
   "PersoGroup": "Personal Channels",
-  "SharedGroup": "Shared Channels",
 
-  "CitizienToString": "Your role is to... well... be a __*villager*__... And to stay alive as long as possible.\nIn order to achieve this goal, you have to kill all werewolves who might decide to kill **you**, and the only way to do that by voting at the end of each day against the personn who seems the guiltest.\nAnd also by convincing the other villagers not to murder you.\nThat'd be a shame.",
+  "Player": "Player",
+  "Spectator": "Spectator",
+  "Admin": "Admin",
+
+  "CitizenToString": "Your role is to... well... be a __*villager*__... And to stay alive as long as possible.\nIn order to achieve this goal, you have to kill all werewolves who might decide to kill **you**, and the only way to do that by voting at the end of each day against the personn who seems the guiltest.\nAnd also by convincing the other villagers not to murder you.\nThat'd be a shame.",
   "WolfToString": "Vous êtes un __*loup-garou*__. Votre but est d'exterminer, de dévorer, d'étriper, de décimer tous les villageois et leurs alliés.",
-  "HunterToString": "Vous Chasseur de profession étant un as de la gachette, **lors de votre mort** (de n'importe qu'elle façon que ce soit) vous pouvez tuer la personne de votre choix dans l'assistance.",
+  "HunterToString": "Vous Chasseur de profession étant un as de la gachette, **lors de votre mort** (de n'importe quelle façon que ce soit) vous pouvez tuer la personne de votre choix dans l'assistance.",
   "SaviorToString": "En tant que __*salvateur*__, vous pouvez choisir une personne (vous compris) **chaque nuit** afin de la protéger de la mort. Une même personne ne peut pas être protégée deux nuits de suite.",
   "WitchToString": "Vos connaissance ésotériques de sorcière vous permettent de concocter **2 potions durant la partie**\n - Une potion de vie qui empèchera la mort de la personne qui a été attaquée par les loups cette nuit\n - Une potion de mort qui tuera la personne de votre choix",
   "SeerToString": "Grâce à vos dons de __*voyante*__, vous pouvez **chaque nuit** connaître le rôle d'une personne.",
@@ -21,6 +26,24 @@
   "MayorMessage": "Vous êtes le maire, en cas d'égalité pendant le vote diurne, votre voix compte double.",
 
   "DailyVoteMessage": "Qui est le plus coupable d'entre vous ?",
-  "NightlyWolfMessage": "Qui est désigné pour être manger ?"
+  "NightlyWolfMessage": "Qui est désigné pour être manger ?",
 
+  "CitizenName": "a Villager",
+  "WolfName": "a Werewolf",
+  "HunterName": "the Hunter",
+  "CupidName": "Cupid",
+  "SeerName": "the Seer",
+  "LittleGirlName": "the Little Girl",
+  "TalkativeSeerName": "the Talkative Seer",
+  "WitchName": "the Witch",
+
+  "DeadMessagePrivate": "You died but the game isn't finished yet.\nNow you can see and hear everyone but please **be fair**.",
+  "DeadMessagePublic": " is dead, and they were ",
+
+  "HunterDeathQuestion": "Your are dying but you can bring someone to die with you",
+  "PublicHunterMessage": "shoted on ",
+
+  "LoveSuicide": " was so sad to lost his / her love that she / he commit to suicide ",
+  "SeerRecMsg": "Who do you want to know the Role ?",
+  "SeerAskMsg": "His / Her role is :" 
 }
