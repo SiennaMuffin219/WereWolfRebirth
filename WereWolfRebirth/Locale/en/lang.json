@@ -45,5 +45,12 @@
 
   "LoveSuicide": " was so sad to lost his / her love that she / he commit to suicide ",
   "SeerRecMsg": "Who do you want to know the Role ?",
-  "SeerAskMsg": "His / Her role is :" 
+  "SeerAskMsg": "His / Her role is :",
+
+  "CupidMessage": "Choose the game's lovers",
+
+  "WitchSaveMsg": "is going to die, do you want to save him / her ? (one use)",
+  "WitchKillMsg": "Do you want to kill someone this night ? (one use)"
+
+
 }

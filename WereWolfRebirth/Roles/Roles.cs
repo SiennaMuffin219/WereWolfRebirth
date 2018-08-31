@@ -8,8 +8,6 @@ using WereWolfRebirth.Locale;
 
 namespace WereWolfRebirth.Roles
 {
-
-
     #region GameRole's Classes
 
     public class Wolf : Personnage
@@ -81,6 +79,7 @@ namespace WereWolfRebirth.Roles
         {
             return base.GotKilled() + $"{Game.Texts.CitizenName}";
         }
+
         public override string GetClassName()
         {
             return Game.Texts.CitizenName;
@@ -99,16 +98,21 @@ namespace WereWolfRebirth.Roles
             throw new NotImplementedException();
         }
 
-        public new static bool HasWon() => Citizen.HasWon();
+        public new static bool HasWon()
+        {
+            return Citizen.HasWon();
+        }
 
         public override string ToString()
         {
             return Game.Texts.SaviorToString + " \n " + Game.Texts.TownFriendly;
         }
+
         public override string GotKilled()
         {
             return base.GotKilled() + $"{Game.Texts.SaviorName}";
         }
+
         public override string GetClassName()
         {
             return Game.Texts.SaviorName;
@@ -122,16 +126,21 @@ namespace WereWolfRebirth.Roles
         {
         }
 
-        public new static bool HasWon() => Citizen.HasWon();
+        public new static bool HasWon()
+        {
+            return Citizen.HasWon();
+        }
 
         public override string ToString()
         {
             return Game.Texts.WitchToString + " \n " + Game.Texts.TownFriendly;
         }
+
         public override string GotKilled()
         {
             return base.GotKilled() + $"{Game.Texts.WitchName}";
         }
+
         public override string GetClassName()
         {
             return Game.Texts.WitchName;
@@ -144,16 +153,21 @@ namespace WereWolfRebirth.Roles
         {
         }
 
-        public new static bool HasWon() => Citizen.HasWon();
+        public new static bool HasWon()
+        {
+            return Citizen.HasWon();
+        }
 
         public override string ToString()
         {
             return Game.Texts.LittleGirlToString + " \n " + Game.Texts.TownFriendly;
         }
+
         public override string GotKilled()
         {
             return base.GotKilled() + $"{Game.Texts.LittleGirlName}";
         }
+
         public override string GetClassName()
         {
             return Game.Texts.LittleGirlName;
@@ -166,16 +180,21 @@ namespace WereWolfRebirth.Roles
         {
         }
 
-        public new static bool HasWon() => Citizen.HasWon();
+        public new static bool HasWon()
+        {
+            return Citizen.HasWon();
+        }
 
         public override string ToString()
         {
             return Game.Texts.HunterToString + " \n " + Game.Texts.TownFriendly;
         }
+
         public override string GotKilled()
         {
             return base.GotKilled() + $"{Game.Texts.HunterName}";
         }
+
         public override string GetClassName()
         {
             return Game.Texts.HunterName;
@@ -188,16 +207,21 @@ namespace WereWolfRebirth.Roles
         {
         }
 
-        public new static bool HasWon() => Citizen.HasWon();
+        public new static bool HasWon()
+        {
+            return Citizen.HasWon();
+        }
 
         public override string ToString()
         {
             return Game.Texts.CupidToString + " \n " + Game.Texts.TownFriendly;
         }
+
         public override string GotKilled()
         {
             return Language.FirstDieMessages(Me) + Game.Texts.CupidName;
         }
+
         public override string GetClassName()
         {
             return Game.Texts.CupidName;
@@ -210,7 +234,10 @@ namespace WereWolfRebirth.Roles
         {
         }
 
-        public new static bool HasWon() => Citizen.HasWon();
+        public new static bool HasWon()
+        {
+            return Citizen.HasWon();
+        }
 
         public override string ToString()
         {
@@ -221,6 +248,7 @@ namespace WereWolfRebirth.Roles
         {
             return base.GotKilled() + $"{Game.Texts.SeerName}";
         }
+
         public override string GetClassName()
         {
             return Game.Texts.SeerName;
@@ -233,7 +261,10 @@ namespace WereWolfRebirth.Roles
         {
         }
 
-        public new static bool HasWon() => Seer.HasWon();
+        public new static bool HasWon()
+        {
+            return Seer.HasWon();
+        }
 
         public override string ToString()
         {
@@ -245,6 +276,7 @@ namespace WereWolfRebirth.Roles
         {
             return base.GotKilled() + $"{Game.Texts.TalkativeSeerName}";
         }
+
         public override string GetClassName()
         {
             return Game.Texts.TalkativeSeerName;
@@ -255,7 +287,7 @@ namespace WereWolfRebirth.Roles
 
     public abstract class Personnage
     {
-        public DiscordMember Me { get; private set; }
+        public DiscordMember Me { get; }
         public bool Alive { get; set; }
         public Effect Effect = Effect.None;
 
@@ -270,7 +302,7 @@ namespace WereWolfRebirth.Roles
             Emoji = emoji;
             Alive = true;
 
-            string name = Me.Username.RemoveSpecialChars() ?? "jesaispasquoi";
+            var name = Me.Username.RemoveSpecialChars() ?? "jesaispasquoi";
 
 
             ChannelV = Game.Guild.CreateChannelAsync(Me.Username.RemoveSpecialChars(), ChannelType.Voice,
@@ -287,7 +319,7 @@ namespace WereWolfRebirth.Roles
             Game.DiscordChannels[GameChannel.TownText].AddOverwriteAsync(Me, GameBuilder.UsrPerms);
             Game.DiscordChannels[GameChannel.TownVoice].AddOverwriteAsync(Me, GameBuilder.UsrPerms);
 
-            ChannelT.SendMessageAsync(ToString()).GetAwaiter().GetResult();
+            ChannelT.SendMessageAsync(this.ToString()).GetAwaiter().GetResult();
         }
 
         public virtual string GotKilled()

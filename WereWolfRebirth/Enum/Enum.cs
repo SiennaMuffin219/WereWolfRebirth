@@ -40,12 +40,14 @@ namespace WereWolfRebirth.Enum
     {
         Voting,         // Vote du jour 
         HunterDead,     // Vengeance du Chasseur
-        Seer,           // Action de la voyante
-        Witch,          // Action de la Witch
-        Wolfs,          // Wolfs & Petite fille 
+   
         Election,       // Election du maire 
-        Cupid           // Cupidon tour 1
+        Cupid,           // Cupidon tour 1
 
+        EndNight,
+
+        NightPhase2, // Action de la Witch
+        NightPhase1 // Wolfs & Petite fille & Voyantes  
     }
 
     public enum GameChannel

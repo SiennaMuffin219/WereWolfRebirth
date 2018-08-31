@@ -45,7 +45,12 @@
 
   "LoveSuicide": "était tellement triste de perdre son amoureux·se qu'il s'est suicidé",
 
-  "SeerRecMsg": "De qui voulez vous connaitre le role ?",
-  "SeerAskMsg": "Son role est : "
+  "SeerAskMsg": "De qui voulez vous connaitre le role ?",
+  "SeerRecMsg": "Son role est : ",
+
+  "CupidMessage": "Choisissez qui tombera amoureux dans la partie",
+
+  "WitchSaveMsg": "est mourant, voulez-vous le sauver avec votre potion de vie ?",
+  "WitchKillMsg": "Voulez-vous empoisonner quelqu'un avec votre potion de mort ?"
 
 }

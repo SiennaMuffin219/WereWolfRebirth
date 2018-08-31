@@ -49,10 +49,13 @@ namespace WereWolfRebirth.Locale
         public string LoveSuicide { get; set; }
         public string SeerRecMsg { get;  set; }
         public string SeerAskMsg { get;  set; }
+        public string CupidMessage { get; set; }
+        public string WitchSaveMsg { get; set; }
+        public string WitchKillMsg { get; set; }
 
         public static string FirstDieMessages(DiscordMember dm)
         {
-            string str = "";
+            var str = "";
 
             switch (Game.Texts.Lang)
             {

@@ -439,12 +439,12 @@ namespace WereWolfRebirth
 
             Console.ResetColor();
 
-            Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            var s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
-            IPAddress broadcast = IPAddress.Parse("192.168.1.21");
+            var broadcast = IPAddress.Parse("192.168.1.21");
 
-            byte[] sendbuf = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(new LogMessage { Loglevel = e.Level.ToString(), Message = e.Message, Source = e.Application, Timestamp = e.Timestamp}));
-            IPEndPoint ep = new IPEndPoint(broadcast, 42915);
+            var sendbuf = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(new LogMessage { Loglevel = e.Level.ToString(), Message = e.Message, Source = e.Application, Timestamp = e.Timestamp}));
+            var ep = new IPEndPoint(broadcast, 42915);
 
             s.SendTo(sendbuf, ep);
         }

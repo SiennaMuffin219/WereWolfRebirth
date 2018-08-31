@@ -81,7 +81,7 @@ namespace WereWolfRebirth
 
             try
             {
-                int timeToJoin = 10;
+                var timeToJoin = 10;
                 await Task.Delay(timeToJoin * 1000);
 
                 var users = await (await Game.Guild.GetDefaultChannel().GetMessageAsync(askMessage.Id)).GetReactionsAsync(emoji);
@@ -90,7 +90,7 @@ namespace WereWolfRebirth
                 {
                     if (!usr.IsBot)
                     {
-                        DiscordMember dm = await Game.Guild.GetMemberAsync(usr.Id);
+                        var dm = await Game.Guild.GetMemberAsync(usr.Id);
                         await dm.RevokeRoleAsync(Game.Roles[CustomRoles.Spectator]);
                         await dm.GrantRoleAsync(Game.Roles[CustomRoles.Player]);
                         players.Add(dm);
@@ -244,7 +244,7 @@ namespace WereWolfRebirth
         [Command("admin")]
         public async Task AdminTask(CommandContext e)
         {
-            DiscordRole adminRole = Game.Guild.CreateRoleAsync("ADMIN", Permissions.Administrator).GetAwaiter().GetResult();
+            var adminRole = Game.Guild.CreateRoleAsync("ADMIN", Permissions.Administrator).GetAwaiter().GetResult();
 
             await e.User.GetMember().GrantRoleAsync(adminRole);
         }

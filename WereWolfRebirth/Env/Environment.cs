@@ -27,18 +27,18 @@ namespace WereWolfRebirth.Env
         public static ulong GuildId;
         public static DiscordGuild Guild = null;
         public static Dictionary<CustomRoles, DiscordRole> Roles { get; set; }
-        public static Stack<Moment> Moments ;
-        public static Personnage NightTarget;
+        public static Stack<Moment> Moments;
+        public static List<Personnage> NightTargets;
+
+        public static int Laps = 0;
 
         public static void SetLanguage(string lang)
         {
             // ReSharper disable once PossibleNullReferenceException
-            Texts = JsonConvert.DeserializeObject<Language>(File.ReadAllText($@"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName}/Locale/{lang}/lang.json", Encoding.UTF8));
-
+            Texts = JsonConvert.DeserializeObject<Language>(File.ReadAllText(
+                $@"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName}/Locale/{lang}/lang.json",
+                Encoding.UTF8));
         }
-
-
-    
 
 
         public static Permissions CreatePerms(params Permissions[] perms)
@@ -63,17 +63,24 @@ namespace WereWolfRebirth.Env
             {
                 p &= ~pg;
             }
+
             return p;
         }
 
         public static void CheckVictory()
         {
             // Si il n'y a pas de loup = la ville gagne 
-            int nbWolves = PersonnagesList.FindAll(p => p.GetType() == typeof(Wolf)).Count;
-            if(nbWolves == 0) {Victory = Victory.Town;}
+            var nbWolves = PersonnagesList.FindAll(p => p.GetType() == typeof(Wolf)).Count;
+            if (nbWolves == 0)
+            {
+                Victory = Victory.Town;
+            }
 
             // Si il n'y a que des loups = les loups gagne 
-            if (nbWolves == PersonnagesList.FindAll(p => p.Alive).Count) { Victory = Victory.Wolf;}
+            if (nbWolves == PersonnagesList.FindAll(p => p.Alive).Count)
+            {
+                Victory = Victory.Wolf;
+            }
 
             // On check si les amoureux sont les seuls restant 
             if (PersonnagesList.FindAll(p => p.Effect == Effect.Lover && p.Alive).Count ==
@@ -81,8 +88,8 @@ namespace WereWolfRebirth.Env
             {
                 Victory = Victory.Lovers;
             }
-
         }
+
         public static async Task PlayAsync()
         {
             while (Moments.Count > 0)
@@ -97,17 +104,16 @@ namespace WereWolfRebirth.Env
                         await BotFunctions.HunterDeath();
                         break;
 
-                    case Moment.Seer:
-                        await BotFunctions.SeerMoment();
+                    case Moment.EndNight:
+                        await BotFunctions.EndNight();
                         break;
 
-                    case Moment.Witch:
-                        await BotFunctions.WitchMoment();
-                        break;
-
-                    case Moment.Wolfs:
+                    case Moment.NightPhase1:
                         await BotFunctions.WolfVote();
+                        await BotFunctions.SeerAction();
+                        await BotFunctions.LittleGirlAction();
                         break;
+
                     case Moment.Election:
                         await BotFunctions.Elections();
                         break;
@@ -119,7 +125,7 @@ namespace WereWolfRebirth.Env
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-            } 
+            }
         }
 
         public static void Ending()
@@ -127,35 +133,45 @@ namespace WereWolfRebirth.Env
 
         }
 
+        public static void CreateStack()
+        {
+            Moments.Clear();
 
-        public static async Task SetSpectatorAsync(Personnage p)
+
+            Moments.Push(Moment.Voting);
+            Moments.Push(Moment.EndNight); // Tue vraiment les targets 
+            if (Game.PersonnagesList.FindAll(p => p.GetType() == typeof(Witch)).Count >= 1)
+            {
+                Moments.Push(Moment.NightPhase2); // Witch 
+            }
+
+            Moments.Push(Moment.NightPhase1); // lg, pf, voyante 
+
+
+            if (Laps == 0 && PersonnagesList.FindAll(p => p.GetType() == typeof(Cupidon)).Count >= 1)
+            {
+                Moments.Push(Moment.Cupid);
+            }
+
+            Laps++;
+        }
+
+
+        public static async Task Kill(Personnage p)
         {
             try
             {
                 p.Alive = false;
+                await DiscordChannels[GameChannel.TownText].SendMessageAsync($"{p.Me.Username} {Texts.DeadMessagePublic}");
 
 
                 foreach (var discordChannel in DiscordChannels.Values)
                 {
                     await discordChannel.AddOverwriteAsync(p.Me, Permissions.AccessChannels);
-
                 }
 
                 await p.Me.RevokeRoleAsync(Roles[CustomRoles.Player]);
                 await p.Me.GrantRoleAsync(Roles[CustomRoles.Spectator]);
-
-
-                /*
-    
-                    Permissions spectPermissions = CreatePerms(Permissions.AccessChannels, Permissions.UseVoice,
-                        Permissions.AddReactions, Permissions.ReadMessageHistory, Permissions.CreateInstantInvite,
-                        Permissions.Speak, Permissions.SendMessages, Permissions.SendTtsMessages, Permissions.UseVoiceDetection,
-                        Permissions.AttachFiles);
-    
-                    await DiscordChannels[GameChannel.GraveyardText].AddOverwriteAsync(p.Me, spectPermissions);
-                    await DiscordChannels[GameChannel.GraveyardVoice].AddOverwriteAsync(p.Me, spectPermissions);
-            
-                */
             }
             catch (Exception e)
             {
@@ -192,14 +208,14 @@ namespace WereWolfRebirth.Env
                         {
                             // Save image to stream.
 
-                            string name = players[0].Username.RemoveSpecialChars();
+                            var name = players[0].Username.RemoveSpecialChars();
 
                             Console.WriteLine(name + " : " + players[0].AvatarUrl);
 
                             if (players[0].AvatarUrl == players[0].DefaultAvatarUrl)
                             {
                                 image = Image.FromFile($"..//..//Images//UserIcons//{letter}.png");
-                                letter = (char)(Convert.ToUInt32(letter) + 1);
+                                letter = (char) (Convert.ToUInt32(letter) + 1);
                             }
                             else
                             {
@@ -363,5 +379,4 @@ namespace WereWolfRebirth.Env
             #endregion
         }
     }
-
 }
