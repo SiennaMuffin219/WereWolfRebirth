@@ -143,6 +143,11 @@ namespace WereWolfRebirth
 
             await RoleAssignment(msgInv, e, players);
 
+            while (Game.Victory == Victory.None)
+            {
+                await Game.PlayAsync();
+
+            }
         }
 
         private async Task NewGuildMember(GuildMemberAddEventArgs e)

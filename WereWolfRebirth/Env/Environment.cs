@@ -1,3 +1,6 @@
+using DSharpPlus;
+using DSharpPlus.Entities;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -5,9 +8,6 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using DSharpPlus;
-using DSharpPlus.Entities;
-using Newtonsoft.Json;
 using WereWolfRebirth.Enum;
 using WereWolfRebirth.Env.Extentions;
 using WereWolfRebirth.Locale;
@@ -29,6 +29,7 @@ namespace WereWolfRebirth.Env
         public static Dictionary<CustomRoles, DiscordRole> Roles { get; set; }
         public static Stack<Moment> Moments;
         public static List<Personnage> NightTargets;
+        public static Task Play;
 
         public static int Laps = 0;
 
@@ -90,41 +91,77 @@ namespace WereWolfRebirth.Env
             }
         }
 
+
+        public static void WriteDebug(object o)
+        {
+            Console.WriteLine("DEBUG\t" + o);
+        }
+
         public static async Task PlayAsync()
         {
-            while (Moments.Count > 0)
+
+
+            try
             {
-                switch (Moments.Pop())
+                Laps++;
+
+                CreateStack();
+
+                WriteDebug($"Laps : {Laps}");
+
+                while (Moments.Count > 0)
                 {
-                    case Moment.Voting:
-                        await BotFunctions.DailyVote();
-                        break;
+                    WriteDebug($"Moment Active : {Moments.Peek()}");
 
-                    case Moment.HunterDead:
-                        await BotFunctions.HunterDeath();
-                        break;
+                    foreach (var moment in Moments.ToArray())
+                    {
+                        WriteDebug($"Moment in pile : {moment}");
 
-                    case Moment.EndNight:
-                        await BotFunctions.EndNight();
-                        break;
+                    }
 
-                    case Moment.NightPhase1:
-                        await BotFunctions.WolfVote();
-                        await BotFunctions.SeerAction();
-                        await BotFunctions.LittleGirlAction();
-                        break;
 
-                    case Moment.Election:
-                        await BotFunctions.Elections();
-                        break;
+                    switch (Moments.Pop())
+                    {
+                        case Moment.Voting:
+                            await BotFunctions.DailyVote();
+                            break;
 
-                    case Moment.Cupid:
-                        await BotFunctions.CupidonChoice();
-                        break;
+                        case Moment.HunterDead:
+                            await BotFunctions.HunterDeath();
+                            break;
 
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                        case Moment.EndNight:
+                            await BotFunctions.EndNight();
+                            break;
+
+                        case Moment.NightPhase1:
+                            await BotFunctions.WolfVote();
+                            await BotFunctions.SeerAction();
+                            await BotFunctions.LittleGirlAction();
+                            break;
+
+                        case Moment.NightPhase2:
+                            await BotFunctions.WitchMoment();
+                            break;
+
+                        case Moment.Election:
+                            await BotFunctions.Elections();
+                            break;
+
+                        case Moment.Cupid:
+                            await BotFunctions.CupidonChoice();
+                            break;
+
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
                 }
+
+                CheckVictory();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
         }
 
@@ -135,7 +172,7 @@ namespace WereWolfRebirth.Env
 
         public static void CreateStack()
         {
-            Moments.Clear();
+            Moments = new Stack<Moment>();
 
 
             Moments.Push(Moment.Voting);
@@ -148,7 +185,7 @@ namespace WereWolfRebirth.Env
             Moments.Push(Moment.NightPhase1); // lg, pf, voyante 
 
 
-            if (Laps == 0 && PersonnagesList.FindAll(p => p.GetType() == typeof(Cupidon)).Count >= 1)
+            if (Laps == 1 && PersonnagesList.FindAll(p => p.GetType() == typeof(Cupidon)).Count >= 1)
             {
                 Moments.Push(Moment.Cupid);
             }
