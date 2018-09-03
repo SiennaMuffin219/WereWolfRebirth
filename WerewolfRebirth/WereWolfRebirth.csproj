@@ -178,6 +178,7 @@
     <Compile Include="BotCommands.cs" />
     <Compile Include="BotFunctions.cs" />
     <Compile Include="Enum\Enum.cs" />
+    <Compile Include="Env\Color.cs" />
     <Compile Include="Env\Environment.cs" />
     <Compile Include="Env\Extentions\Extensions.cs" />
     <Compile Include="Locale\lang.cs" />
@@ -223,7 +224,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties Locale_4fr_4lang_1json__JSONSchema="http://json.schemastore.org/appsettings" />
+      <UserProperties Locale_4fr_4lang_1json__JSONSchema="http://json.schemastore.org/bowerrc" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

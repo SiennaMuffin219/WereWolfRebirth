@@ -2,6 +2,7 @@
   "Lang": "en",
 
   "BotName": "Moderator",
+  "BotWantPlay": "Who want to play ? ?\nPlease connect to *bot* channel even if you dont want to speak.",
 
   "GraveyardChannel": "Graveyard",
   "TownChannel": "Town",
@@ -50,7 +51,14 @@
   "CupidMessage": "Choose the game's lovers",
 
   "WitchSaveMsg": "is going to die, do you want to save him / her ? (one use)",
-  "WitchKillMsg": "Do you want to kill someone this night ? (one use)"
+  "WitchKillMsg": "Do you want to kill someone this night ? (one use)",
 
+  "TownVictory": "The village has won !",
+  "WolfVictory": "Only wolves are remaining in the village",
+  "LoverVictory": "The lovers are the ones remaining",
 
+  "NightAnnoucement": "The night is showing, villagers are comming back to their homes",
+  "DayAnnoucement": "The day is showing, villagers are comming to the INN.", // Bande d'alcooliques !
+
+  "NotEnoughPlayer": "Not enough players :"
 }

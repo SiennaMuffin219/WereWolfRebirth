@@ -2,6 +2,7 @@
   "Lang": "fr",
 
   "BotName": "Conteur",
+  "BotWantPlay":  "Qui veux jouer ?\nVeuillez vous connecter au salon *bot* même si vous ne voulez ou pouvez pas parler" ,
 
   "GraveyardChannel": "Cimetière",
   "TownChannel": "Village",
@@ -51,6 +52,14 @@
   "CupidMessage": "Choisissez qui tombera amoureux dans la partie",
 
   "WitchSaveMsg": "est mourant, voulez-vous le sauver avec votre potion de vie ?",
-  "WitchKillMsg": "Voulez-vous empoisonner quelqu'un avec votre potion de mort ?"
+  "WitchKillMsg": "Voulez-vous empoisonner quelqu'un avec votre potion de mort ?",
 
+  "TownVictory": "Tout les loups on été exterminer, les villagoies peuvent enfin dormir en paix : **Victoire du village**",
+  "WolfVictory": "Il ne reste que des loups dans le village : **Victoire des loups**",
+  "LoverVictory": "Les Amoureux sont les seuls vivants : **Victoire des Amoureux**",
+
+  "NightAnnoucement": "La nuit est entrain de tomber sur le village\nLes villagoies rentre chez eux",
+  "DayAnnoucement": "Il fait jour tout le village se rassemble sur la place du village.",
+
+  "NotEnoughPlayer":  "Il n'y a pas assez de joueur dans le jeu :" 
 }

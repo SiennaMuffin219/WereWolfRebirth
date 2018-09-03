@@ -52,6 +52,13 @@ namespace WereWolfRebirth.Locale
         public string CupidMessage { get; set; }
         public string WitchSaveMsg { get; set; }
         public string WitchKillMsg { get; set; }
+        public string TownVictory { get; set; }
+        public string LoverVictory { get; set; }
+        public string WolfVictory { get; set; }
+        public string NightAnnoucement { get; set; }
+        public string DayAnnoucement { get; set; }
+        public string NotEnoughPlayer { get; set; }
+        public string BotWantPlay { get; set; }
 
         public static string FirstDieMessages(DiscordMember dm)
         {

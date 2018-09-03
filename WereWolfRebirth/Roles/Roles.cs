@@ -296,7 +296,7 @@ namespace WereWolfRebirth.Roles
 
         public DiscordGuildEmoji Emoji;
 
-        public Personnage(DiscordMember me, DiscordGuildEmoji emoji)
+        protected Personnage(DiscordMember me, DiscordGuildEmoji emoji)
         {
             Me = me;
             Emoji = emoji;
@@ -318,8 +318,15 @@ namespace WereWolfRebirth.Roles
 
             Game.DiscordChannels[GameChannel.TownText].AddOverwriteAsync(Me, GameBuilder.UsrPerms);
             Game.DiscordChannels[GameChannel.TownVoice].AddOverwriteAsync(Me, GameBuilder.UsrPerms);
+            var embed = new DiscordEmbedBuilder()
+            {
+                Title = ToString(),
+                Color = Color.InfoColor
+            };
+            ChannelT.SendMessageAsync(embed: embed.Build()).GetAwaiter().GetResult();
+            me.PlaceInAsync(ChannelV);
 
-            ChannelT.SendMessageAsync(this.ToString()).GetAwaiter().GetResult();
+
         }
 
         public virtual string GotKilled()

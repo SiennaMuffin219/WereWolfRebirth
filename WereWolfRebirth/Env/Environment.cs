@@ -1,6 +1,3 @@
-using DSharpPlus;
-using DSharpPlus.Entities;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -8,6 +5,9 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using DSharpPlus;
+using DSharpPlus.Entities;
+using Newtonsoft.Json;
 using WereWolfRebirth.Enum;
 using WereWolfRebirth.Env.Extentions;
 using WereWolfRebirth.Locale;
@@ -29,9 +29,8 @@ namespace WereWolfRebirth.Env
         public static Dictionary<CustomRoles, DiscordRole> Roles { get; set; }
         public static Stack<Moment> Moments;
         public static List<Personnage> NightTargets;
-        public static Task Play;
 
-        public static int Laps = 0;
+        public static int Laps;
 
         public static void SetLanguage(string lang)
         {
@@ -71,16 +70,24 @@ namespace WereWolfRebirth.Env
         public static void CheckVictory()
         {
             // Si il n'y a pas de loup = la ville gagne 
-            var nbWolves = PersonnagesList.FindAll(p => p.GetType() == typeof(Wolf)).Count;
+            var nbWolves = PersonnagesList.FindAll(p => p.GetType() == typeof(Wolf) && p.Alive).Count;
             if (nbWolves == 0)
             {
                 Victory = Victory.Town;
+                DiscordChannels[GameChannel.TownText].SendMessageAsync(Texts.TownVictory);
             }
 
             // Si il n'y a que des loups = les loups gagne 
             if (nbWolves == PersonnagesList.FindAll(p => p.Alive).Count)
             {
                 Victory = Victory.Wolf;
+                var embed = new DiscordEmbedBuilder()
+                {
+                    Title = Texts.WolfVictory,
+                    Color = Color.WolfColor,
+                    ImageUrl = "https://f4.bcbits.com/img/a3037005253_16.jpg"
+                };
+                DiscordChannels[GameChannel.TownText].SendMessageAsync(embed: embed.Build());
             }
 
             // On check si les amoureux sont les seuls restant 
@@ -88,6 +95,17 @@ namespace WereWolfRebirth.Env
                 PersonnagesList.FindAll(p2 => p2.Alive).Count)
             {
                 Victory = Victory.Lovers;
+                var embed = new DiscordEmbedBuilder()
+                {
+                    Title = Texts.LoverVictory,
+                    Color = Color.LoveColor
+                };
+                DiscordChannels[GameChannel.TownText].SendMessageAsync(embed: embed.Build());
+            }
+
+            if (Victory != Victory.None)
+            {
+                Moments.Push(Moment.End);
             }
         }
 
@@ -100,16 +118,15 @@ namespace WereWolfRebirth.Env
         public static async Task PlayAsync()
         {
 
-
             try
             {
-                Laps++;
-
                 CreateStack();
 
                 WriteDebug($"Laps : {Laps}");
 
-                while (Moments.Count > 0)
+                bool done = false;
+
+                while (Moments.Count > 0 && !done)
                 {
                     WriteDebug($"Moment Active : {Moments.Peek()}");
 
@@ -132,9 +149,11 @@ namespace WereWolfRebirth.Env
 
                         case Moment.EndNight:
                             await BotFunctions.EndNight();
+                            await BotFunctions.DayAnnoucement();
                             break;
 
                         case Moment.NightPhase1:
+                            await BotFunctions.NightAnnoucement();
                             await BotFunctions.WolfVote();
                             await BotFunctions.SeerAction();
                             await BotFunctions.LittleGirlAction();
@@ -152,12 +171,14 @@ namespace WereWolfRebirth.Env
                             await BotFunctions.CupidonChoice();
                             break;
 
+                        case Moment.End:
+                            done = true;
+                            break;
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
                 }
 
-                CheckVictory();
             }
             catch (Exception e)
             {
@@ -177,7 +198,7 @@ namespace WereWolfRebirth.Env
 
             Moments.Push(Moment.Voting);
             Moments.Push(Moment.EndNight); // Tue vraiment les targets 
-            if (Game.PersonnagesList.FindAll(p => p.GetType() == typeof(Witch)).Count >= 1)
+            if (PersonnagesList.FindAll(p => p.GetType() == typeof(Witch)).Count >= 1)
             {
                 Moments.Push(Moment.NightPhase2); // Witch 
             }
@@ -199,7 +220,14 @@ namespace WereWolfRebirth.Env
             try
             {
                 p.Alive = false;
-                await DiscordChannels[GameChannel.TownText].SendMessageAsync($"{p.Me.Username} {Texts.DeadMessagePublic}");
+                await p.Me.PlaceInAsync(Game.DiscordChannels[GameChannel.GraveyardVoice]);
+                var embed = new DiscordEmbedBuilder()
+                {
+                    Color = Color.DeadColor,
+                    Title = $"{p.Me.Username} {Texts.DeadMessagePublic} {p.GetClassName()}"
+                };
+
+                await DiscordChannels[GameChannel.TownText].SendMessageAsync(embed: embed.Build());
 
 
                 foreach (var discordChannel in DiscordChannels.Values)
@@ -309,6 +337,13 @@ namespace WereWolfRebirth.Env
                     roles.RemoveAt(nbRand);
                     players.RemoveAt(0);
                 }
+
+                foreach (var dm in players)
+                {
+                    await Game.DiscordChannels[GameChannel.BotVoice].AddOverwriteAsync(dm, Permissions.None, Permissions.AccessChannels);
+                    await Game.DiscordChannels[GameChannel.BotText].AddOverwriteAsync(dm, Permissions.None, Permissions.AccessChannels);
+                }
+
             }
             catch (Exception ex1)
             {
@@ -390,23 +425,20 @@ namespace WereWolfRebirth.Env
             Game.Roles = new Dictionary<CustomRoles, DiscordRole>();
 
 
-            var adminRole = await Game.Guild.CreateRoleAsync(Game.Texts.BotName, Permissions.Administrator,
-                new DiscordColor("#EE0000"), true, true, "GameRole Bot");
+            var adminRole = await Game.Guild.CreateRoleAsync(Game.Texts.BotName, Permissions.Administrator, Color.AdminColor, true, true, "GameRole Bot");
             Game.Roles.Add(CustomRoles.Admin, adminRole);
 
 
             var playerPerms = Game.CreatePerms(Permissions.SendMessages, Permissions.ReadMessageHistory,
                 Permissions.AddReactions);
 
-            var playerRole = await Game.Guild.CreateRoleAsync(Game.Texts.Player, playerPerms,
-                new DiscordColor("#1de020"), true, true, "GameRole Joueur");
+            var playerRole = await Game.Guild.CreateRoleAsync(Game.Texts.Player, playerPerms, Color.PlayerColor, true, true, "GameRole Joueur");
             Game.Roles.Add(CustomRoles.Player, playerRole);
 
 
             var spectPerms = Game.CreatePerms(Permissions.AccessChannels, Permissions.ReadMessageHistory);
             Game.RevokePerm(spectPerms, Permissions.ManageEmojis);
-            var spectRole = await Game.Guild.CreateRoleAsync(Game.Texts.Spectator, spectPerms,
-                new DiscordColor("#7200a3"), true, false, "GameRole spectateur");
+            var spectRole = await Game.Guild.CreateRoleAsync(Game.Texts.Spectator, spectPerms, Color.SpectColor, true, false, "GameRole spectateur");
 
             Game.Roles.Add(CustomRoles.Spectator, spectRole);
 

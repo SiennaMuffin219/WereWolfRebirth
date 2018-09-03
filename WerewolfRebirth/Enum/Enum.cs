@@ -10,12 +10,9 @@ namespace WereWolfRebirth.Enum
         Witch,          // Sorcière
         Cupid,          // Cupidon
         Savior,         // Salvateur
-        Wolf,           // Loup
-        None            // None
+        Wolf // None
 
     }
-
-    
     public enum Effect
     {
         None = 0,
@@ -24,18 +21,17 @@ namespace WereWolfRebirth.Enum
         // Charmed = 4
         
     }
-
     public enum Victory
     {
         None,   // Pas encore terminé
         Wolf,   // Les loups
         Town,   // Le Village
-        Lovers	// Les Amoureux
+        Lovers,	// Les Amoureux
 
+        NotPlayable
         //  PiedPiper, // Joueur de flute
 
     }
-
     public enum Moment
     {
         Voting,         // Vote du jour 
@@ -47,9 +43,10 @@ namespace WereWolfRebirth.Enum
         EndNight,
 
         NightPhase2, // Action de la Witch
-        NightPhase1 // Wolfs & Petite fille & Voyantes  
-    }
+        NightPhase1, // Wolfs & Petite fille & Voyantes  
 
+        End
+    }
     public enum GameChannel
     {
 		PersoGroup,
@@ -58,9 +55,10 @@ namespace WereWolfRebirth.Enum
 		WolfText,
 		WolfVoice,
 		GraveyardText,
-		BotText
+		BotText,
+        GraveyardVoice,
+        BotVoice
     }
-
     public enum CustomRoles
     {
         Spectator,
