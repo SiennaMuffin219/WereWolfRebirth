@@ -181,6 +181,7 @@
     <Compile Include="Env\Color.cs" />
     <Compile Include="Env\Environment.cs" />
     <Compile Include="Env\Extentions\Extensions.cs" />
+    <Compile Include="Env\Game.cs" />
     <Compile Include="Locale\lang.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Roles\Roles.cs" />

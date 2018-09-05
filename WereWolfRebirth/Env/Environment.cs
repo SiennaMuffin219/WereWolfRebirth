@@ -16,241 +16,23 @@ using ImageFormat = System.Drawing.Imaging.ImageFormat;
 
 namespace WereWolfRebirth.Env
 {
-    internal static class Game
+
+    public static class Global
     {
-        public static Dictionary<GameChannel, DiscordChannel> DiscordChannels;
-        public static Language Texts;
-        public static bool Wait = true;
-        public static List<Personnage> PersonnagesList;
-        public static Victory Victory = Victory.None;
-        public static DiscordClient Client = null;
-        public static ulong GuildId;
-        public static DiscordGuild Guild = null;
+        public static List<Game> Games = new List<Game>();
         public static Dictionary<CustomRoles, DiscordRole> Roles { get; set; }
-        public static Stack<Moment> Moments;
-        public static List<Personnage> NightTargets;
 
-        public static int Laps;
-
-        public static void SetLanguage(string lang)
-        {
-            // ReSharper disable once PossibleNullReferenceException
-            Texts = JsonConvert.DeserializeObject<Language>(File.ReadAllText(
-                $@"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName}/Locale/{lang}/lang.json",
-                Encoding.UTF8));
-        }
-
-
-        public static Permissions CreatePerms(params Permissions[] perms)
-        {
-            return GrantPerm(Permissions.None, perms);
-        }
-
-
-        public static Permissions GrantPerm(Permissions p, params Permissions[] grant)
-        {
-            foreach (var pg in grant)
-            {
-                p |= pg;
-            }
-
-            return p;
-        }
-
-        public static Permissions RevokePerm(Permissions p, params Permissions[] grant)
-        {
-            foreach (var pg in grant)
-            {
-                p &= ~pg;
-            }
-
-            return p;
-        }
-
-        public static void CheckVictory()
-        {
-            // Si il n'y a pas de loup = la ville gagne 
-            var nbWolves = PersonnagesList.FindAll(p => p.GetType() == typeof(Wolf) && p.Alive).Count;
-            if (nbWolves == 0)
-            {
-                Victory = Victory.Town;
-                DiscordChannels[GameChannel.TownText].SendMessageAsync(Texts.TownVictory);
-            }
-
-            // Si il n'y a que des loups = les loups gagne 
-            if (nbWolves == PersonnagesList.FindAll(p => p.Alive).Count)
-            {
-                Victory = Victory.Wolf;
-                var embed = new DiscordEmbedBuilder()
-                {
-                    Title = Texts.WolfVictory,
-                    Color = Color.WolfColor,
-                    ImageUrl = "https://f4.bcbits.com/img/a3037005253_16.jpg"
-                };
-                DiscordChannels[GameChannel.TownText].SendMessageAsync(embed: embed.Build());
-            }
-
-            // On check si les amoureux sont les seuls restant 
-            if (PersonnagesList.FindAll(p => p.Effect == Effect.Lover && p.Alive).Count ==
-                PersonnagesList.FindAll(p2 => p2.Alive).Count)
-            {
-                Victory = Victory.Lovers;
-                var embed = new DiscordEmbedBuilder()
-                {
-                    Title = Texts.LoverVictory,
-                    Color = Color.LoveColor
-                };
-                DiscordChannels[GameChannel.TownText].SendMessageAsync(embed: embed.Build());
-            }
-
-            if (Victory != Victory.None)
-            {
-                Moments.Push(Moment.End);
-            }
-        }
-
-
-        public static void WriteDebug(object o)
-        {
-            Console.WriteLine("DEBUG\t" + o);
-        }
-
-        public static async Task PlayAsync()
-        {
-
-            try
-            {
-                CreateStack();
-
-                WriteDebug($"Laps : {Laps}");
-
-                bool done = false;
-
-                while (Moments.Count > 0 && !done)
-                {
-                    WriteDebug($"Moment Active : {Moments.Peek()}");
-
-                    foreach (var moment in Moments.ToArray())
-                    {
-                        WriteDebug($"Moment in pile : {moment}");
-
-                    }
-
-
-                    switch (Moments.Pop())
-                    {
-                        case Moment.Voting:
-                            await BotFunctions.DailyVote();
-                            break;
-
-                        case Moment.HunterDead:
-                            await BotFunctions.HunterDeath();
-                            break;
-
-                        case Moment.EndNight:
-                            await BotFunctions.EndNight();
-                            await BotFunctions.DayAnnoucement();
-                            break;
-
-                        case Moment.NightPhase1:
-                            await BotFunctions.NightAnnoucement();
-                            await BotFunctions.WolfVote();
-                            await BotFunctions.SeerAction();
-                            await BotFunctions.LittleGirlAction();
-                            break;
-
-                        case Moment.NightPhase2:
-                            await BotFunctions.WitchMoment();
-                            break;
-
-                        case Moment.Election:
-                            await BotFunctions.Elections();
-                            break;
-
-                        case Moment.Cupid:
-                            await BotFunctions.CupidonChoice();
-                            break;
-
-                        case Moment.End:
-                            done = true;
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-                }
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-        }
-
-        public static void Ending()
-        {
-
-        }
-
-        public static void CreateStack()
-        {
-            Moments = new Stack<Moment>();
-
-
-            Moments.Push(Moment.Voting);
-            Moments.Push(Moment.EndNight); // Tue vraiment les targets 
-            if (PersonnagesList.FindAll(p => p.GetType() == typeof(Witch)).Count >= 1)
-            {
-                Moments.Push(Moment.NightPhase2); // Witch 
-            }
-
-            Moments.Push(Moment.NightPhase1); // lg, pf, voyante 
-
-
-            if (Laps == 1 && PersonnagesList.FindAll(p => p.GetType() == typeof(Cupidon)).Count >= 1)
-            {
-                Moments.Push(Moment.Cupid);
-            }
-
-            Laps++;
-        }
-
-
-        public static async Task Kill(Personnage p)
-        {
-            try
-            {
-                p.Alive = false;
-                await p.Me.PlaceInAsync(Game.DiscordChannels[GameChannel.GraveyardVoice]);
-                var embed = new DiscordEmbedBuilder()
-                {
-                    Color = Color.DeadColor,
-                    Title = $"{p.Me.Username} {Texts.DeadMessagePublic} {p.GetClassName()}"
-                };
-
-                await DiscordChannels[GameChannel.TownText].SendMessageAsync(embed: embed.Build());
-
-
-                foreach (var discordChannel in DiscordChannels.Values)
-                {
-                    await discordChannel.AddOverwriteAsync(p.Me, Permissions.AccessChannels);
-                }
-
-                await p.Me.RevokeRoleAsync(Roles[CustomRoles.Player]);
-                await p.Me.GrantRoleAsync(Roles[CustomRoles.Spectator]);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-        }
+        public static int currGame = 0;
+        public static DiscordClient Client { get; set; }
     }
+
 
     public static class GameBuilder
     {
-        public static Permissions UsrPerms = Game.CreatePerms(Permissions.AccessChannels, Permissions.AddReactions,
+        public static Permissions UsrPerms = CreatePerms(Permissions.AccessChannels, Permissions.AddReactions,
             Permissions.SendMessages);
 
-        public static async Task CreatePersonnages(List<DiscordMember> players)
+        public static async Task CreatePersonnages(Game game, List<DiscordMember> players)
         {
             try
             {
@@ -258,7 +40,7 @@ namespace WereWolfRebirth.Env
                 var rand = new Random(DateTime.Now.Millisecond);
 
 
-                Game.PersonnagesList = new List<Personnage>();
+                game.PersonnagesList = new List<Personnage>();
 
                 var letter = 'a';
 
@@ -291,46 +73,46 @@ namespace WereWolfRebirth.Env
 
                             image.Save(stream, ImageFormat.Png);
 
-                            emoji = await Game.Guild.CreateEmojiAsync(name, stream);
+                            emoji = await game.Guild.CreateEmojiAsync(name, stream);
                         }
                     }
                     catch (Exception e)
                     {
                         Console.WriteLine("Erreur Emoji");
                         Console.WriteLine(e);
-                        emoji = DiscordEmoji.FromName(Game.Client, ":yum:") as DiscordGuildEmoji;
+                        emoji = DiscordEmoji.FromName(Global.Client, ":yum:") as DiscordGuildEmoji;
                     }
 
 
                     switch (roles[nbRand])
                     {
                         case GameRole.Citizen:
-                            Game.PersonnagesList.Add(new Citizen(players[0], emoji));
+                            game.PersonnagesList.Add(new Citizen(game, players[0], emoji));
                             break;
                         case GameRole.Hunter:
-                            Game.PersonnagesList.Add(new Hunter(players[0], emoji));
+                            game.PersonnagesList.Add(new Hunter(game, players[0], emoji));
                             break;
                         case GameRole.Cupid:
-                            Game.PersonnagesList.Add(new Cupidon(players[0], emoji));
+                            game.PersonnagesList.Add(new Cupidon(game, players[0], emoji));
                             break;
                         case GameRole.Witch:
-                            Game.PersonnagesList.Add(new Witch(players[0], emoji));
+                            game.PersonnagesList.Add(new Witch(game, players[0], emoji));
                             break;
                         case GameRole.Savior:
-                            Game.PersonnagesList.Add(new Salvator(players[0], emoji));
+                            game.PersonnagesList.Add(new Salvator(game, players[0], emoji));
                             break;
                         case GameRole.Seer:
-                            Game.PersonnagesList.Add(new Seer(players[0], emoji));
+                            game.PersonnagesList.Add(new Seer(game, players[0], emoji));
                             break;
                         case GameRole.TalkativeSeer:
-                            Game.PersonnagesList.Add(new TalkativeSeer(players[0], emoji));
+                            game.PersonnagesList.Add(new TalkativeSeer(game, players[0], emoji));
                             break;
                         case GameRole.LittleGirl:
-                            Game.PersonnagesList.Add(new LittleGirl(players[0], emoji));
+                            game.PersonnagesList.Add(new LittleGirl(game, players[0], emoji));
                             break;
 
                         case GameRole.Wolf:
-                            Game.PersonnagesList.Add(new Wolf(players[0], emoji));
+                            game.PersonnagesList.Add(new Wolf(game, players[0], emoji));
                             break;
                     }
 
@@ -340,8 +122,8 @@ namespace WereWolfRebirth.Env
 
                 foreach (var dm in players)
                 {
-                    await Game.DiscordChannels[GameChannel.BotVoice].AddOverwriteAsync(dm, Permissions.None, Permissions.AccessChannels);
-                    await Game.DiscordChannels[GameChannel.BotText].AddOverwriteAsync(dm, Permissions.None, Permissions.AccessChannels);
+                    await game.DiscordChannels[GameChannel.BotVoice].AddOverwriteAsync(dm, Permissions.None, Permissions.AccessChannels);
+                    await game.DiscordChannels[GameChannel.BotText].AddOverwriteAsync(dm, Permissions.None, Permissions.AccessChannels);
                 }
 
             }
@@ -401,16 +183,16 @@ namespace WereWolfRebirth.Env
             return roleList;
         }
 
-        public static void Debug()
+        public static void Debug(Game game)
         {
-            if (Game.PersonnagesList is null)
+            if (game.PersonnagesList is null)
             {
                 Console.WriteLine("Il n'y a aucun personnage joueur dans le jeu");
             }
             else
             {
                 var i = 0;
-                foreach (var p in Game.PersonnagesList)
+                foreach (var p in game.PersonnagesList)
                 {
                     Console.WriteLine(i + " : " + p);
                     i++;
@@ -418,34 +200,68 @@ namespace WereWolfRebirth.Env
             }
         }
 
-        public static async Task CreateDiscordRoles()
+        public static async Task CreateDiscordRoles(Game game)
         {
             #region Roles
 
-            Game.Roles = new Dictionary<CustomRoles, DiscordRole>();
+            Global.Roles = new Dictionary<CustomRoles, DiscordRole>();
 
 
-            var adminRole = await Game.Guild.CreateRoleAsync(Game.Texts.BotName, Permissions.Administrator, Color.AdminColor, true, true, "GameRole Bot");
-            Game.Roles.Add(CustomRoles.Admin, adminRole);
+            var adminRole = await game.Guild.CreateRoleAsync(game.Texts.BotName, Permissions.Administrator, Color.AdminColor, true, true, "GameRole Bot");
+            Global.Roles.Add(CustomRoles.Admin, adminRole);
 
 
-            var playerPerms = Game.CreatePerms(Permissions.SendMessages, Permissions.ReadMessageHistory,
+            var playerPerms = GameBuilder.CreatePerms(Permissions.SendMessages, Permissions.ReadMessageHistory,
                 Permissions.AddReactions);
 
-            var playerRole = await Game.Guild.CreateRoleAsync(Game.Texts.Player, playerPerms, Color.PlayerColor, true, true, "GameRole Joueur");
-            Game.Roles.Add(CustomRoles.Player, playerRole);
+            var playerRole = await game.Guild.CreateRoleAsync(game.Texts.Player, playerPerms, Color.PlayerColor, true, true, "GameRole Joueur");
+            Global.Roles.Add(CustomRoles.Player, playerRole);
 
 
-            var spectPerms = Game.CreatePerms(Permissions.AccessChannels, Permissions.ReadMessageHistory);
-            Game.RevokePerm(spectPerms, Permissions.ManageEmojis);
-            var spectRole = await Game.Guild.CreateRoleAsync(Game.Texts.Spectator, spectPerms, Color.SpectColor, true, false, "GameRole spectateur");
+            var spectPerms = GameBuilder.CreatePerms(Permissions.AccessChannels, Permissions.ReadMessageHistory);
+            GameBuilder.RevokePerm(spectPerms, Permissions.ManageEmojis);
+            var spectRole = await game.Guild.CreateRoleAsync(game.Texts.Spectator, spectPerms, Color.SpectColor, true, false, "GameRole spectateur");
 
-            Game.Roles.Add(CustomRoles.Spectator, spectRole);
+            Global.Roles.Add(CustomRoles.Spectator, spectRole);
 
 
-            await Game.Guild.EveryoneRole.ModifyAsync(x => x.Permissions = Permissions.None);
+            await game.Guild.EveryoneRole.ModifyAsync(x => x.Permissions = Permissions.None);
 
             #endregion
         }
+
+                public static Permissions CreatePerms(params Permissions[] perms)
+        {
+            return GrantPerm(Permissions.None, perms);
+        }
+
+
+        public static Permissions GrantPerm(Permissions p, params Permissions[] grant)
+        {
+            foreach (var pg in grant)
+            {
+                p |= pg;
+            }
+
+            return p;
+        }
+
+        public static Permissions RevokePerm(Permissions p, params Permissions[] grant)
+        {
+            foreach (var pg in grant)
+            {
+                p &= ~pg;
+            }
+
+            return p;
+        }
+
+        public static class DiscordUserExtention
+        {
+        }
+
+        public static DiscordMember GetMember(DiscordGuild Guild, DiscordUser usr) => Guild.GetMemberAsync(usr.Id).GetAwaiter().GetResult();
+
+
     }
 }

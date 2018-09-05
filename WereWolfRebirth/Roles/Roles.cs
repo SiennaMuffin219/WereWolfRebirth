@@ -12,7 +12,7 @@ namespace WereWolfRebirth.Roles
 
     public class Wolf : Personnage
     {
-        public Wolf(DiscordMember me, DiscordGuildEmoji emoji) : base(me, emoji)
+        public Wolf(Game game, DiscordMember me, DiscordGuildEmoji emoji) : base(game, me, emoji)
         {
             Game.DiscordChannels[GameChannel.WolfText].AddOverwriteAsync(me, GameBuilder.UsrPerms);
             Game.DiscordChannels[GameChannel.WolfVoice].AddOverwriteAsync(me, GameBuilder.UsrPerms);
@@ -23,17 +23,6 @@ namespace WereWolfRebirth.Roles
         {
             throw new NotImplementedException();
         }
-
-
-        public static bool HasWon()
-        {
-            return !Game.PersonnagesList.Exists(x =>
-                x.GetType() == Type.GetType("WereWolfRebirth.Roles.Citizen") ||
-                x.GetType() == Type.GetType("WereWolfRebirth.Roles.PiedPiper") ||
-                x.GetType().IsSubclassOf(Type.GetType("WereWolfRebirth.Roles.Citizen") ??
-                                         throw new InvalidOperationException()));
-        }
-
 
         public override string ToString()
         {
@@ -54,7 +43,7 @@ namespace WereWolfRebirth.Roles
 
     public class Citizen : Personnage
     {
-        public Citizen(DiscordMember me, DiscordGuildEmoji emoji) : base(me, emoji)
+        public Citizen(Game game, DiscordMember me, DiscordGuildEmoji emoji) : base(game, me, emoji)
         {
         }
 
@@ -62,13 +51,6 @@ namespace WereWolfRebirth.Roles
         {
         }
 
-        public static bool HasWon()
-        {
-            return !Game.PersonnagesList.Exists(x =>
-                x.GetType() == Type.GetType("WereWolfRebirth.Roles.Wolf") ||
-                x.GetType().IsSubclassOf(Type.GetType("WereWolfRebirth.Roles.Wolf") ??
-                                         throw new InvalidOperationException()));
-        }
 
         public override string ToString()
         {
@@ -89,7 +71,7 @@ namespace WereWolfRebirth.Roles
 
     public class Salvator : Citizen
     {
-        public Salvator(DiscordMember me, DiscordGuildEmoji emoji) : base(me, emoji)
+        public Salvator(Game game, DiscordMember me, DiscordGuildEmoji emoji) : base(game, me, emoji)
         {
         }
 
@@ -98,10 +80,6 @@ namespace WereWolfRebirth.Roles
             throw new NotImplementedException();
         }
 
-        public new static bool HasWon()
-        {
-            return Citizen.HasWon();
-        }
 
         public override string ToString()
         {
@@ -122,14 +100,10 @@ namespace WereWolfRebirth.Roles
 
     public class Witch : Citizen
     {
-        public Witch(DiscordMember me, DiscordGuildEmoji emoji) : base(me, emoji)
+        public Witch(Game game, DiscordMember me, DiscordGuildEmoji emoji) : base(game, me, emoji)
         {
         }
 
-        public new static bool HasWon()
-        {
-            return Citizen.HasWon();
-        }
 
         public override string ToString()
         {
@@ -149,14 +123,10 @@ namespace WereWolfRebirth.Roles
 
     public class LittleGirl : Citizen
     {
-        public LittleGirl(DiscordMember me, DiscordGuildEmoji emoji) : base(me, emoji)
+        public LittleGirl(Game game, DiscordMember me, DiscordGuildEmoji emoji) : base(game, me, emoji)
         {
         }
 
-        public new static bool HasWon()
-        {
-            return Citizen.HasWon();
-        }
 
         public override string ToString()
         {
@@ -176,13 +146,8 @@ namespace WereWolfRebirth.Roles
 
     public class Hunter : Citizen
     {
-        public Hunter(DiscordMember me, DiscordGuildEmoji emoji) : base(me, emoji)
+        public Hunter(Game game, DiscordMember me, DiscordGuildEmoji emoji) : base(game, me, emoji)
         {
-        }
-
-        public new static bool HasWon()
-        {
-            return Citizen.HasWon();
         }
 
         public override string ToString()
@@ -203,13 +168,8 @@ namespace WereWolfRebirth.Roles
 
     public class Cupidon : Citizen
     {
-        public Cupidon(DiscordMember me, DiscordGuildEmoji emoji) : base(me, emoji)
+        public Cupidon(Game game, DiscordMember me, DiscordGuildEmoji emoji) : base(game, me, emoji)
         {
-        }
-
-        public new static bool HasWon()
-        {
-            return Citizen.HasWon();
         }
 
         public override string ToString()
@@ -219,7 +179,7 @@ namespace WereWolfRebirth.Roles
 
         public override string GotKilled()
         {
-            return Language.FirstDieMessages(Me) + Game.Texts.CupidName;
+            return Language.FirstDieMessages(Game, Me) + Game.Texts.CupidName;
         }
 
         public override string GetClassName()
@@ -230,13 +190,8 @@ namespace WereWolfRebirth.Roles
 
     public class Seer : Citizen
     {
-        public Seer(DiscordMember me, DiscordGuildEmoji emoji) : base(me, emoji)
+        public Seer(Game game, DiscordMember me, DiscordGuildEmoji emoji) : base(game, me, emoji)
         {
-        }
-
-        public new static bool HasWon()
-        {
-            return Citizen.HasWon();
         }
 
         public override string ToString()
@@ -257,13 +212,8 @@ namespace WereWolfRebirth.Roles
 
     public class TalkativeSeer : Seer
     {
-        public TalkativeSeer(DiscordMember me, DiscordGuildEmoji emoji) : base(me, emoji)
+        public TalkativeSeer(Game game, DiscordMember me, DiscordGuildEmoji emoji) : base(game, me, emoji)
         {
-        }
-
-        public new static bool HasWon()
-        {
-            return Seer.HasWon();
         }
 
         public override string ToString()
@@ -296,12 +246,14 @@ namespace WereWolfRebirth.Roles
 
         public DiscordGuildEmoji Emoji;
 
-        protected Personnage(DiscordMember me, DiscordGuildEmoji emoji)
+        public Game Game { get; set; }
+
+        protected Personnage(Game game, DiscordMember me, DiscordGuildEmoji emoji)
         {
             Me = me;
             Emoji = emoji;
             Alive = true;
-
+            Game = game;
             var name = Me.Username.RemoveSpecialChars() ?? "jesaispasquoi";
 
 
@@ -318,15 +270,13 @@ namespace WereWolfRebirth.Roles
 
             Game.DiscordChannels[GameChannel.TownText].AddOverwriteAsync(Me, GameBuilder.UsrPerms);
             Game.DiscordChannels[GameChannel.TownVoice].AddOverwriteAsync(Me, GameBuilder.UsrPerms);
-            var embed = new DiscordEmbedBuilder()
+            var embed = new DiscordEmbedBuilder
             {
                 Title = ToString(),
                 Color = Color.InfoColor
             };
             ChannelT.SendMessageAsync(embed: embed.Build()).GetAwaiter().GetResult();
             me.PlaceInAsync(ChannelV);
-
-
         }
 
         public virtual string GotKilled()

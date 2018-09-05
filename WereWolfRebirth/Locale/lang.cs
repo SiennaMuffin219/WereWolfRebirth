@@ -60,11 +60,11 @@ namespace WereWolfRebirth.Locale
         public string NotEnoughPlayer { get; set; }
         public string BotWantPlay { get; set; }
 
-        public static string FirstDieMessages(DiscordMember dm)
+        public static string FirstDieMessages(Game game, DiscordMember dm)
         {
             var str = "";
 
-            switch (Game.Texts.Lang)
+            switch (game.Texts.Lang)
             {
                 case "fr":
                     str = $"{dm.DisplayName} est mort, il était ";
