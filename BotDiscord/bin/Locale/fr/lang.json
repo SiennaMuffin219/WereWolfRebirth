@@ -1,0 +1,67 @@
+{
+  "Lang": "fr",
+
+  "BotName": "Conteur",
+  "BotWantPlay": "Qui veux jouer ?\nVeuillez vous connecter au salon *bot* même si vous ne voulez ou pouvez pas parler",
+
+  "GraveyardChannel": "Cimetière",
+  "TownChannel": "Village",
+  "WolvesChannel": "Loups",
+  "PersoGroup": "Salons Personnels",
+
+  "Player": "Joueur",
+  "Spectator": "Spectateur",
+  "Admin": "Admin",
+
+  "CitizenToString": "Votre role est... ben... d'être un __*villageois*__... Et de le rester le plus longtemps possible.\nPour cela vous devez éliminer les loups garous qui pourraient décider de **vous** éliminer et le seul moyen de le faire est de voter à la fin de la journée contre celui qui vous semble le plus suspect.\nEt aussi de réussir à ce que les autres villageois ne votent pas votre mort.\nAvouez que ça serait dommage.",
+  "WolfToString": "Vous êtes un __*loup-garou*__. Votre but est d'exterminer, de dévorer, d'étriper, de décimer tous les villageois et leurs alliés.",
+  "HunterToString": "Vous Chasseur de profession étant un as de la gachette, **lors de votre mort** (de n'importe quelle façon que ce soit) vous pouvez tuer la personne de votre choix dans l'assistance.",
+  "SaviorToString": "En tant que __*salvateur*__, vous pouvez choisir une personne (vous compris) **chaque nuit** afin de la protéger de la mort. Une même personne ne peut pas être protégée deux nuits de suite.",
+  "WitchToString": "Vos connaissance ésotériques de sorcière vous permettent de concocter **2 potions durant la partie**\n - Une potion de vie qui empèchera la mort de la personne qui a été attaquée par les loups cette nuit\n - Une potion de mort qui tuera la personne de votre choix",
+  "SeerToString": "Grâce à vos dons de __*voyante*__, vous pouvez **chaque nuit** connaître le rôle d'une personne.",
+  "TalkativeSeerToString": "Étant très bavarde le rôle ainsi connu est partagé avec le reste des personnes",
+  "LittleGirlToString": "N'arrivant pas à dormir dans ce petit village, vous décidez de sortir de votre maison et entendez des bruits étranges venant des loups",
+  "CupidToString": "Durant la premiere nuit, vous, __*Cupidon*__, choisissez deux personnes qui deviennent amoureuses.",
+  "TownFriendly": "Vous êtes avec les autres villageois. Votre but est d'éliminer les loups.",
+  "CharmedMessage": "Si votre amoureux meurt, vous le suivez dans sa mort.",
+  "MayorMessage": "Vous êtes le maire, en cas d'égalité pendant le vote diurne, votre voix compte double.",
+
+  "DailyVoteMessage": "Qui est le plus coupable d'entre vous ?",
+  "NightlyWolfMessage": "Qui est désigné pour être manger ?",
+
+  "CitizenName": "un Villageois",
+  "WolfName": "un Loup Garou",
+  "HunterName": "le Chasseur",
+  "CupidName": "Cupidon",
+  "SeerName": "la Voyante",
+  "LittleGirlName": "la Petite Fille",
+  "TalkativeSeerName": "la Voyante Bavarde",
+  "WitchName": "la Sorcière",
+
+  "DeadMessagePrivate": "Vous venez de mourir, mais ce n'est pas terminé pour vous : vous pouvez maintenant voir toutes les discussions, mais **attention** toute tentative de triche (non fair play) est condamnée.",
+  "DeadMessagePublic": " est mort, et c'était ",
+
+  "HunterDeathQuestion": "Vous etes mourant mais dans un dernier effort vous pouvez emmené quelqu'un avec vous dans la mort",
+  "PublicHunterMessage": "A tiré sur ",
+
+  "LoveSuicide": "était tellement triste de perdre son amoureux·se qu'il s'est suicidé",
+
+  "SeerAskMsg": "De qui voulez vous connaitre le role ?",
+  "SeerRecMsg": "Son role est : ",
+
+  "CupidMessage": "Choisissez qui tombera amoureux dans la partie",
+
+  "WitchSaveMsg": "est mourant, voulez-vous le sauver avec votre potion de vie ?",
+  "WitchKillMsg": "Voulez-vous empoisonner quelqu'un avec votre potion de mort ?",
+
+  "TownVictory": "Tout les loups on été exterminer, les villagoies peuvent enfin dormir en paix : **Victoire du village**",
+  "WolfVictory": "Il ne reste que des loups dans le village : **Victoire des loups**",
+  "LoverVictory": "Les Amoureux sont les seuls vivants : **Victoire des Amoureux**",
+
+  "NightAnnoucement": "La nuit est entrain de tomber sur le village\nLes villagoies rentre chez eux",
+  "DayAnnoucement": "Il fait jour tout le village se rassemble sur la place du village.",
+
+  "NotEnoughPlayer": "Il n'y a pas assez de joueur dans le jeu :",
+
+  "RoleString" :  "Informations personnelles : " 
+}

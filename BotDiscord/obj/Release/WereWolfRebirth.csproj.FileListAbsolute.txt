@@ -1,0 +1,4 @@
+P:\PERSO\DiscordBot\WerewolfRebirth\obj\Release\WereWolfRebirth.csprojAssemblyReference.cache
+P:\PERSO\DiscordBot\WerewolfRebirth\obj\Release\WereWolfRebirth.csproj.CoreCompileInputs.cache
+P:\PERSO\DiscordBot\WerewolfRebirth\obj\Release\WerewolfRebirth.exe
+P:\PERSO\DiscordBot\WerewolfRebirth\obj\Release\WerewolfRebirth.pdb

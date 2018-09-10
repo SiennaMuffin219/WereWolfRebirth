@@ -1,0 +1,12 @@
+P:\IUT\Ptut\BotDiscord\BotDiscord\bin\Release\netcoreapp2.0\BotDiscord.dll.config
+P:\IUT\Ptut\BotDiscord\BotDiscord\bin\Release\netcoreapp2.0\BotDiscord.deps.json
+P:\IUT\Ptut\BotDiscord\BotDiscord\bin\Release\netcoreapp2.0\BotDiscord.dll
+P:\IUT\Ptut\BotDiscord\BotDiscord\bin\Release\netcoreapp2.0\BotDiscord.pdb
+P:\IUT\Ptut\BotDiscord\BotDiscord\obj\Release\netcoreapp2.0\BotDiscord.csproj.CoreCompileInputs.cache
+P:\IUT\Ptut\BotDiscord\BotDiscord\obj\Release\netcoreapp2.0\BotDiscord.AssemblyInfoInputs.cache
+P:\IUT\Ptut\BotDiscord\BotDiscord\obj\Release\netcoreapp2.0\BotDiscord.AssemblyInfo.cs
+P:\IUT\Ptut\BotDiscord\BotDiscord\obj\Release\netcoreapp2.0\BotDiscord.dll
+P:\IUT\Ptut\BotDiscord\BotDiscord\obj\Release\netcoreapp2.0\BotDiscord.pdb
+P:\IUT\Ptut\BotDiscord\BotDiscord\bin\Release\netcoreapp2.0\BotDiscord.runtimeconfig.json
+P:\IUT\Ptut\BotDiscord\BotDiscord\bin\Release\netcoreapp2.0\BotDiscord.runtimeconfig.dev.json
+P:\IUT\Ptut\BotDiscord\BotDiscord\obj\Release\netcoreapp2.0\BotDiscord.csprojAssemblyReference.cache

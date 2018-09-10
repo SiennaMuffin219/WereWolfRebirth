@@ -1,0 +1,71 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <ApplicationIcon />
+    <OutputType>Exe</OutputType>
+    <StartupObject>BotDiscord.Program</StartupObject>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Prefer32Bit>false</Prefer32Bit>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="obj\Debug\netcoreapp2.1\BotDiscord.AssemblyInfo.cs" />
+    <Compile Include="obj\Debug\netcoreapp2.1\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+    <Compile Include="obj\Debug\netcoreapp2.1\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
+    <Compile Include="obj\Debug\netcoreapp2.1\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="obj\Debug\WereWolfRebirth.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\project.assets.json" />
+    <Content Include="obj\Release\WereWolfRebirth.csproj.FileListAbsolute.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="obj\BotDiscord.csproj.nuget.cache" />
+    <None Include="obj\BotDiscord.csproj.nuget.g.props" />
+    <None Include="obj\BotDiscord.csproj.nuget.g.targets" />
+    <None Include="obj\Debug\DesignTimeResolveAssemblyReferences.cache" />
+    <None Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
+    <None Include="obj\Debug\netcoreapp2.1\BotDiscord.AssemblyInfoInputs.cache" />
+    <None Include="obj\Debug\netcoreapp2.1\BotDiscord.assets.cache" />
+    <None Include="obj\Debug\netcoreapp2.1\BotDiscord.csproj.CoreCompileInputs.cache" />
+    <None Include="obj\Debug\netcoreapp2.1\BotDiscord.csprojAssemblyReference.cache" />
+    <None Include="obj\Debug\WerewolfRebirth.application" />
+    <None Include="obj\Debug\WereWolfRebirth.csproj.CopyComplete" />
+    <None Include="obj\Debug\WereWolfRebirth.csproj.CoreCompileInputs.cache" />
+    <None Include="obj\Debug\WereWolfRebirth.csprojAssemblyReference.cache" />
+    <None Include="obj\Debug\WerewolfRebirth.exe" />
+    <None Include="obj\Debug\WerewolfRebirth.exe.manifest" />
+    <None Include="obj\Debug\WerewolfRebirth.pdb" />
+    <None Include="obj\Release\WereWolfRebirth.csproj.CoreCompileInputs.cache" />
+    <None Include="obj\Release\WereWolfRebirth.csprojAssemblyReference.cache" />
+    <None Include="obj\Release\WerewolfRebirth.exe" />
+    <None Include="obj\Release\WerewolfRebirth.pdb" />
+    <None Include="WereWolfRebirth.csproj" />
+    <None Include="WereWolfRebirth.csproj.user" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Locale\de\" />
+    <Folder Include="Locale\es\" />
+    <Folder Include="obj\Debug\TempPE\" />
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DSharpPlus" Version="4.0.0-nightly-00522" />
+    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-nightly-00522" />
+    <PackageReference Include="DSharpPlus.WebSocket.WebSocketSharp" Version="4.0.0-nightly-00522" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="runtime.linux-x64.CoreCompat.System.Drawing" Version="1.0.0-beta009" />
+  </ItemGroup>
+
+</Project>
